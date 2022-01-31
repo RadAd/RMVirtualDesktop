@@ -51,7 +51,7 @@ const CComPtr<IVirtualDesktopNotificationService>& GetVirtualNotificationService
 
 const CComPtr<IVirtualDesktopManagerInternal>& GetDesktopManagerInternal(LogF* pLog, void* logdata)
 {
-    static CComPtr<IVirtualDesktopManagerInternal> pDesktopManagerInternal;;
+    static CComPtr<IVirtualDesktopManagerInternal> pDesktopManagerInternal;
     if (!pDesktopManagerInternal)
     {
         const CComPtr<IServiceProvider>& pServiceProvider = GetImmersiveShell(pLog, logdata);
@@ -62,7 +62,7 @@ const CComPtr<IVirtualDesktopManagerInternal>& GetDesktopManagerInternal(LogF* p
 
 CComPtr<IVirtualDesktop> GetCurrentDesktop(LogF* pLog, void* logdata)
 {
-    CComPtr<IVirtualDesktop> pCurrentDesktop;;
+    CComPtr<IVirtualDesktop> pCurrentDesktop;
     const CComPtr<IVirtualDesktopManagerInternal>& pDesktopManagerInternal = GetDesktopManagerInternal(pLog, logdata);
     LogHR(pLog, logdata, pDesktopManagerInternal->GetCurrentDesktop(&pCurrentDesktop), L"GetCurrentDesktop");
     return pCurrentDesktop;
@@ -102,7 +102,7 @@ int GetDesktopCount(LogF* pLog, void* logdata)
 
 int GetDesktopNumber(LogF* pLog, void* logdata, const CComPtr<IVirtualDesktop>& pFindDesktop)
 {
-    int dn = -1;
+    int dn = 0;
     const CComPtr<IVirtualDesktopManagerInternal>& pDesktopManagerInternal = GetDesktopManagerInternal(pLog, logdata);
     CComPtr<IObjectArray> pDesktopArray;
     if (pDesktopManagerInternal && SUCCEEDED(pDesktopManagerInternal->GetDesktops(&pDesktopArray)))
@@ -138,7 +138,7 @@ std::wstring GetDesktopName(LogF* pLog, void* logdata, const CComPtr<IVirtualDes
         else
         {
             WCHAR buffer[128];
-            _snwprintf_s(buffer, _TRUNCATE, L"Desktop %d", GetDesktopNumber(pLog, logdata, pDesktop) + 1);
+            _snwprintf_s(buffer, _TRUNCATE, L"Desktop %d", GetDesktopNumber(pLog, logdata, pDesktop));
             ret = buffer;
         }
     }
@@ -153,7 +153,7 @@ CComPtr<IVirtualDesktop> GetDesktop(LogF* pLog, void* logdata, int d)
     if (pDesktopManagerInternal && SUCCEEDED(pDesktopManagerInternal->GetDesktops(&pDesktopArray)))
     {
         CComPtr<IVirtualDesktop> pDesktop;
-        LogHR(pLog, logdata, pDesktopArray->GetAt(d, IID_PPV_ARGS(&pDesktop)), E_INVALIDARG, L"IObjectArray GetAt");
+        LogHR(pLog, logdata, pDesktopArray->GetAt(d - 1, IID_PPV_ARGS(&pDesktop)), E_INVALIDARG, L"IObjectArray GetAt");
         return pDesktop;
     }
     else
