@@ -7,12 +7,12 @@ echo on
 @call :safemkdir Plugins
 @call :safemkdir Plugins\32Bit
 @call :safemkdir Plugins\64Bit
-copy Bin\Win32Release\VirtualDesktop.dll Plugins\32Bit
-copy Bin\x64Release\VirtualDesktop.dll Plugins\64Bit
+copy Bin\Win32Release\VirtualDesktop.dll Plugins\32Bit || exit /b
+copy Bin\x64Release\VirtualDesktop.dll Plugins\64Bit || exit /b
 if exist %name%.zip del %name%.zip
 7z a %name%.zip Plugins Skins RMSKIN.ini
 del %name%.rmskin
-powershell -File MakeRmsSkin.ps1 %name%.zip
+powershell -File %~dp0MakeRmsSkin.ps1 %name%.zip
 @goto :eof
 
 :safemkdir %1
