@@ -172,25 +172,31 @@ private:
 private:
     void RegisterForNotifications()
     {
-        HRESULT hr;
         CComPtr<IVirtualDesktopNotificationService> pVirtualNotificationService = GetVirtualNotificationService(RmLogF, rm);
 
         pNotify = new VirtualDesktopNotification(this);
         if (idVirtualDesktopNotification == 0)
         {
-            if (!pVirtualNotificationService || FAILED(hr = pVirtualNotificationService->Register(pNotify, &idVirtualDesktopNotification)))
-                RmLogF(rm, LOG_ERROR, L"Error register DesktopNotificationService %d\n", hr);
+            if (!pVirtualNotificationService)
+            {
+                HRESULT hr;
+                if (FAILED(hr = pVirtualNotificationService->Register(pNotify, &idVirtualDesktopNotification)))
+                    RmLogF(rm, LOG_ERROR, L"Register DesktopNotificationService %#10.8x", hr);
+            }
         }
     }
 
     void UnregisterForNotifications()
     {
-        HRESULT hr;
         CComPtr<IVirtualDesktopNotificationService> pVirtualNotificationService = GetVirtualNotificationService(RmLogF, rm);
         if (idVirtualDesktopNotification != 0)
         {
-            if (!pVirtualNotificationService || FAILED(hr = pVirtualNotificationService->Unregister(idVirtualDesktopNotification)))
-                OutputDebugString(L"RADVDDB: Error register DesktopNotificationService\n");
+            if (!pVirtualNotificationService)
+            {
+                HRESULT hr;
+                if (FAILED(hr = pVirtualNotificationService->Unregister(idVirtualDesktopNotification)))
+                    RmLogF(rm, LOG_ERROR, L"Unregister DesktopNotificationService %#10.8x", hr);
+            }
             idVirtualDesktopNotification = 0;
         }
     }
