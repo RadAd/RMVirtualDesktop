@@ -66,43 +66,54 @@ public:
             return string.c_str();
     }
 
-    void ExecuteBang(LPCWSTR args) const
+    void ExecuteBang(const int argc, const LPWSTR* argv) const
     {
-        if (_wcsicmp(args, L"Next") == 0)
+        if (argc > 0)
         {
-            CComPtr<IVirtualDesktop> pDesktop = GetDesktopNext(RmLogF, rm);
-            if (pDesktop)
-                SwitchDesktop(RmLogF, rm, pDesktop);
+            if (_wcsicmp(argv[0], L"Next") == 0)
+            {
+                CComPtr<IVirtualDesktop> pDesktop = GetDesktopNext(RmLogF, rm);
+                if (pDesktop)
+                    SwitchDesktop(RmLogF, rm, pDesktop);
+            }
+            else if (_wcsicmp(argv[0], L"Prev") == 0)
+            {
+                CComPtr<IVirtualDesktop> pDesktop = GetDesktopPrev(RmLogF, rm);
+                if (pDesktop)
+                    SwitchDesktop(RmLogF, rm, pDesktop);
+            }
+            else if (_wcsicmp(argv[0], L"Create") == 0)
+                CreateDesktop(RmLogF, rm);
+            else if (_wcsicmp(argv[0], L"Remove") == 0)
+            {
+                if (argc > 1)
+                {
+                    int d = _wtoi(argv[1]);
+                    CComPtr<IVirtualDesktop> pDesktop = GetDesktop(RmLogF, rm, d);
+                    if (pDesktop)
+                        RemoveDesktop(RmLogF, rm, pDesktop);
+                }
+                else
+                    RemoveDesktop(RmLogF, rm, GetCurrentDesktop(RmLogF, rm));
+            }
+            else if (_wcsicmp(argv[0], L"Switch") == 0)
+            {
+                if (argc > 1)
+                {
+                    int d = _wtoi(argv[1]);
+                    CComPtr<IVirtualDesktop> pDesktop = GetDesktop(RmLogF, rm, d);
+                    if (pDesktop)
+                        SwitchDesktop(RmLogF, rm, pDesktop);
+                }
+                else
+                    RmLogF(rm, LOG_ERROR, L"Arg expected \"%s\"", argv[0]);
+            }
+            else
+                RmLogF(rm, LOG_ERROR, L"Invalid Bang \"%s\"", argv[0]);
         }
-        else if (_wcsicmp(args, L"Prev") == 0)
-        {
-            CComPtr<IVirtualDesktop> pDesktop = GetDesktopPrev(RmLogF, rm);
-            if (pDesktop)
-                SwitchDesktop(RmLogF, rm, pDesktop);
-        }
-        else if (_wcsicmp(args, L"Create") == 0)
-            CreateDesktop(RmLogF, rm);
-        else if (_wcsicmp(args, L"Remove") == 0)
-            RemoveDesktop(RmLogF, rm, GetCurrentDesktop(RmLogF, rm));
-        else if (_wcsnicmp(args, L"Remove ", 7) == 0)
-        {
-            int d = _wtoi(args + 7);
-            CComPtr<IVirtualDesktop> pDesktop = GetDesktop(RmLogF, rm, d);
-            if (pDesktop)
-                RemoveDesktop(RmLogF, rm, pDesktop);
-        }
-        else if (_wcsnicmp(args, L"Switch ", 7) == 0)
-        {
-            int d = _wtoi(args + 7);
-            CComPtr<IVirtualDesktop> pDesktop = GetDesktop(RmLogF, rm, d);
-            if (pDesktop)
-                SwitchDesktop(RmLogF, rm, pDesktop);
-        }
-        else
-            RmLogF(rm, LOG_ERROR, L"Invalid Bang \"%s\"", args);
     }
 
-    LPCWSTR Name(const int argc, const WCHAR* argv[]) const
+    LPCWSTR Name(const int argc, const LPWSTR* argv) const
     {
         if (argc == 1)
         {
@@ -247,10 +258,13 @@ PLUGIN_EXPORT LPCWSTR GetString(void* data)
 PLUGIN_EXPORT void ExecuteBang(void* data, LPCWSTR args)
 {
     const Measure* measure = (Measure*) data;
-    measure->ExecuteBang(args);
+    int argc = 0;
+    LPWSTR* argv = CommandLineToArgvW(args, &argc);
+    measure->ExecuteBang(argc, argv);
+    LocalFree(argv);
 }
 
-PLUGIN_EXPORT LPCWSTR Name(void* data, const int argc, const WCHAR* argv[])
+PLUGIN_EXPORT LPCWSTR Name(void* data, const int argc, const LPWSTR argv[])
 {
     const Measure* measure = (Measure*) data;
     return measure->Name(argc, argv);
