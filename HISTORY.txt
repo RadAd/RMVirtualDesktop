@@ -1,5 +1,5 @@
 [Version 1.1]
-Initial version
+Change desktop number system to 1-based
 
 [Version 1.0]
 Initial version
