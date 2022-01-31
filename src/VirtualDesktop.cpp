@@ -175,28 +175,22 @@ private:
         CComPtr<IVirtualDesktopNotificationService> pVirtualNotificationService = GetVirtualNotificationService(RmLogF, rm);
 
         pNotify = new VirtualDesktopNotification(this);
-        if (idVirtualDesktopNotification == 0)
+        if (idVirtualDesktopNotification == 0 && pVirtualNotificationService)
         {
-            if (!pVirtualNotificationService)
-            {
-                HRESULT hr;
-                if (FAILED(hr = pVirtualNotificationService->Register(pNotify, &idVirtualDesktopNotification)))
-                    RmLogF(rm, LOG_ERROR, L"Register DesktopNotificationService %#10.8x", hr);
-            }
+            HRESULT hr;
+            if (FAILED(hr = pVirtualNotificationService->Register(pNotify, &idVirtualDesktopNotification)))
+                RmLogF(rm, LOG_ERROR, L"Register DesktopNotificationService %#10.8x", hr);
         }
     }
 
     void UnregisterForNotifications()
     {
         CComPtr<IVirtualDesktopNotificationService> pVirtualNotificationService = GetVirtualNotificationService(RmLogF, rm);
-        if (idVirtualDesktopNotification != 0)
+        if (idVirtualDesktopNotification != 0 && pVirtualNotificationService)
         {
-            if (!pVirtualNotificationService)
-            {
-                HRESULT hr;
-                if (FAILED(hr = pVirtualNotificationService->Unregister(idVirtualDesktopNotification)))
-                    RmLogF(rm, LOG_ERROR, L"Unregister DesktopNotificationService %#10.8x", hr);
-            }
+            HRESULT hr;
+            if (FAILED(hr = pVirtualNotificationService->Unregister(idVirtualDesktopNotification)))
+                RmLogF(rm, LOG_ERROR, L"Unregister DesktopNotificationService %#10.8x", hr);
             idVirtualDesktopNotification = 0;
         }
     }
@@ -227,6 +221,7 @@ private:
         WCHAR buffer[128];
         _snwprintf_s(buffer, _TRUNCATE, L"!UpdateMeasure \"%s\"", RmGetMeasureName(rm));
         RmExecute(skin, buffer);
+        RmLog(rm, LOG_DEBUG, buffer);
     }
 };
 
