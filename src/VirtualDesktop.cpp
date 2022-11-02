@@ -2,6 +2,7 @@
 #include <RainmeterAPI.h>
 #include <string>
 #include <cassert>
+#include <atlbase.h>
 
 #include "VDUtils.h"
 #include "VDNotification.h"
@@ -71,17 +72,9 @@ public:
         if (argc > 0)
         {
             if (_wcsicmp(argv[0], L"Next") == 0)
-            {
-                CComPtr<IVirtualDesktop> pDesktop = GetDesktopNext(RmLogF, rm);
-                if (pDesktop)
-                    SwitchDesktop(RmLogF, rm, pDesktop);
-            }
+                SwitchDesktop(RmLogF, rm, RightDirection);
             else if (_wcsicmp(argv[0], L"Prev") == 0)
-            {
-                CComPtr<IVirtualDesktop> pDesktop = GetDesktopPrev(RmLogF, rm);
-                if (pDesktop)
-                    SwitchDesktop(RmLogF, rm, pDesktop);
-            }
+                SwitchDesktop(RmLogF, rm, LeftDirection);
             else if (_wcsicmp(argv[0], L"Create") == 0)
                 CreateDesktop(RmLogF, rm);
             else if (_wcsicmp(argv[0], L"Remove") == 0)
@@ -89,21 +82,17 @@ public:
                 if (argc > 1)
                 {
                     int d = _wtoi(argv[1]);
-                    CComPtr<IVirtualDesktop> pDesktop = GetDesktop(RmLogF, rm, d);
-                    if (pDesktop)
-                        RemoveDesktop(RmLogF, rm, pDesktop);
+                    RemoveDesktop(RmLogF, rm, d);
                 }
                 else
-                    RemoveDesktop(RmLogF, rm, GetCurrentDesktop(RmLogF, rm));
+                    RemoveDesktop(RmLogF, rm, -1);
             }
             else if (_wcsicmp(argv[0], L"Switch") == 0)
             {
                 if (argc > 1)
                 {
                     int d = _wtoi(argv[1]);
-                    CComPtr<IVirtualDesktop> pDesktop = GetDesktop(RmLogF, rm, d);
-                    if (pDesktop)
-                        SwitchDesktop(RmLogF, rm, pDesktop);
+                    SwitchDesktop(RmLogF, rm, d);
                 }
                 else
                     RmLogF(rm, LOG_ERROR, L"Arg expected \"%s\"", argv[0]);
@@ -119,9 +108,7 @@ public:
         {
             buffer.clear();
             int d = _wtoi(argv[0]);
-            CComPtr<IVirtualDesktop> pDesktop = GetDesktop(RmLogF, rm, d);
-            if (pDesktop)
-                buffer = GetDesktopName(RmLogF, rm, pDesktop);
+            buffer = GetDesktopName(RmLogF, rm, d);
             //return buffer.empty() ? nullptr : buffer.c_str();
             return buffer.c_str();
         }
@@ -138,10 +125,10 @@ private:
     mutable std::wstring buffer;
 
     DWORD idVirtualDesktopNotification = 0;
-    CComPtr<IVirtualDesktopNotification> pNotify;
+    CComPtr<VirtualDesktopNotification> pNotify;
 
 private:
-    virtual void VirtualDesktopCreated(IVirtualDesktop* pDesktop) override
+    virtual void VirtualDesktopCreated(Win10::IVirtualDesktop* pDesktop) override
     {
         if (type == MeasureType::COUNT)
         {
@@ -150,7 +137,7 @@ private:
         }
     }
 
-    virtual void VirtualDesktopDestroyed(IVirtualDesktop* pDesktopDestroyed, IVirtualDesktop* pDesktopFallback) override
+    virtual void VirtualDesktopDestroyed(Win10::IVirtualDesktop* pDesktopDestroyed, Win10::IVirtualDesktop* pDesktopFallback) override
     {
         if (type == MeasureType::COUNT)
         {
@@ -159,11 +146,49 @@ private:
         }
     }
 
-    virtual void CurrentVirtualDesktopChanged(IVirtualDesktop* pDesktopOld, IVirtualDesktop* pDesktopNew) override
+    virtual void CurrentVirtualDesktopChanged(Win10::IVirtualDesktop* pDesktopOld, Win10::IVirtualDesktop* pDesktopNew) override
     {
         if (type == MeasureType::CURRENT)
         {
-            assert(GetCurrentDesktop(RmLogF, rm).IsEqualObject(pDesktopNew));
+            //assert(GetCurrentDesktop10(RmLogF, rm).IsEqualObject(pDesktopNew));
+            UpdateCurrent(pDesktopNew);
+            UpdateMeasure();
+        }
+    }
+
+    virtual void VirtualDesktopCreated(Win11::IVirtualDesktop* pDesktop) override
+    {
+        if (type == MeasureType::COUNT)
+        {
+            Update();
+            UpdateMeasure();
+        }
+    }
+
+    virtual void VirtualDesktopDestroyed(Win11::IVirtualDesktop* pDesktopDestroyed, Win11::IVirtualDesktop* pDesktopFallback) override
+    {
+        if (type == MeasureType::COUNT)
+        {
+            Update();
+            UpdateMeasure();
+        }
+    }
+
+    virtual void VirtualDesktopMoved(Win11::IVirtualDesktop* pDesktop, int64_t oldIndex, int64_t newIndex) override
+    {
+        // TODO
+    }
+
+    virtual void VirtualDesktopNameChanged(IApplicationView* pView, HSTRING name) override
+    {
+        // TODO
+    }
+
+    virtual void CurrentVirtualDesktopChanged(Win11::IVirtualDesktop* pDesktopOld, Win11::IVirtualDesktop* pDesktopNew) override
+    {
+        if (type == MeasureType::CURRENT)
+        {
+            //assert(GetCurrentDesktop11(RmLogF, rm).IsEqualObject(pDesktopNew));
             UpdateCurrent(pDesktopNew);
             UpdateMeasure();
         }
@@ -172,25 +197,18 @@ private:
 private:
     void RegisterForNotifications()
     {
-        CComPtr<IVirtualDesktopNotificationService> pVirtualNotificationService = GetVirtualNotificationService(RmLogF, rm);
-
-        pNotify = new VirtualDesktopNotification(this);
-        if (idVirtualDesktopNotification == 0 && pVirtualNotificationService)
+        if (idVirtualDesktopNotification == 0)
         {
-            HRESULT hr;
-            if (FAILED(hr = pVirtualNotificationService->Register(pNotify, &idVirtualDesktopNotification)))
-                RmLogF(rm, LOG_ERROR, L"Register DesktopNotificationService %#10.8x", hr);
+            pNotify = new VirtualDesktopNotification(this);
+            idVirtualDesktopNotification = Register(RmLogF, rm, pNotify);
         }
     }
 
     void UnregisterForNotifications()
     {
-        CComPtr<IVirtualDesktopNotificationService> pVirtualNotificationService = GetVirtualNotificationService(RmLogF, rm);
-        if (idVirtualDesktopNotification != 0 && pVirtualNotificationService)
+        if (idVirtualDesktopNotification != 0)
         {
-            HRESULT hr;
-            if (FAILED(hr = pVirtualNotificationService->Unregister(idVirtualDesktopNotification)))
-                RmLogF(rm, LOG_ERROR, L"Unregister DesktopNotificationService %#10.8x", hr);
+            Unregister(RmLogF, rm, idVirtualDesktopNotification);
             idVirtualDesktopNotification = 0;
         }
     }
@@ -204,16 +222,25 @@ private:
             string.clear();
             break;
         case MeasureType::CURRENT:
-            UpdateCurrent(GetCurrentDesktop(RmLogF, rm));
+            //UpdateCurrent(GetCurrentDesktop10(RmLogF, rm));
+            value = GetCurrentDesktopNumber(RmLogF, rm);
+            string = GetDesktopName(RmLogF, rm, value);
             break;
         }
     }
 
-    void UpdateCurrent(const CComPtr<IVirtualDesktop>& pDesktop)
+    void UpdateCurrent(const CComPtr<Win10::IVirtualDesktop>& pDesktop)
     {
         assert(type == MeasureType::CURRENT);
         value = GetDesktopNumber(RmLogF, rm, pDesktop);
-        string = GetDesktopName(RmLogF, rm, pDesktop);
+        string = GetDesktopName(RmLogF, rm, value);
+    }
+
+    void UpdateCurrent(const CComPtr<Win11::IVirtualDesktop>& pDesktop)
+    {
+        assert(type == MeasureType::CURRENT);
+        value = GetDesktopNumber(RmLogF, rm, pDesktop);
+        string = GetDesktopName(RmLogF, rm, value);
     }
 
     void UpdateMeasure() const
