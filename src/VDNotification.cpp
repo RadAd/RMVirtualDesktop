@@ -12,10 +12,17 @@ STDMETHODIMP VirtualDesktopNotification::QueryInterface(REFIID riid, void** ppvO
         return E_INVALIDARG;
     *ppvObject = NULL;
 
-    if (riid == IID_IUnknown || riid == Win10::IID_IVirtualDesktopNotification || riid == Win11::IID_IVirtualDesktopNotification)
+    if (riid == IID_IUnknown || riid == Win10::IID_IVirtualDesktopNotification)
     {
         // Increment the reference count and return the pointer.
-        *ppvObject = (LPVOID)this;
+        *ppvObject = (LPVOID) static_cast<Win10::IVirtualDesktopNotification*>(this);
+        AddRef();
+        return S_OK;
+    }
+    else if (riid == Win11::IID_IVirtualDesktopNotification)
+    {
+        // Increment the reference count and return the pointer.
+        *ppvObject = (LPVOID) static_cast<Win11::IVirtualDesktopNotification*>(this);
         AddRef();
         return S_OK;
     }
@@ -96,13 +103,6 @@ STDMETHODIMP VirtualDesktopNotification::VirtualDesktopDestroyed(IObjectArray* m
     return S_OK;
 }
 
-#if 0
-STDMETHODIMP VirtualDesktopNotification::ViewVirtualDesktopChanged(IApplicationView* pView)
-{
-    return S_OK;
-}
-#endif
-
 STDMETHODIMP VirtualDesktopNotification::VirtualDesktopIsPerMonitorChanged(_In_ BOOL isPerMonitor)
 {
     return S_OK;
@@ -114,9 +114,14 @@ STDMETHODIMP VirtualDesktopNotification::VirtualDesktopMoved(IObjectArray* monit
     return S_OK;
 }
 
-STDMETHODIMP VirtualDesktopNotification::VirtualDesktopNameChanged(IApplicationView* pView, HSTRING name)
+STDMETHODIMP VirtualDesktopNotification::VirtualDesktopNameChanged11(Win11::IVirtualDesktop* pDesktop, HSTRING name)
 {
-    _notify->VirtualDesktopNameChanged(pView, name);
+    _notify->VirtualDesktopNameChanged(pDesktop, name);
+    return S_OK;
+}
+
+STDMETHODIMP VirtualDesktopNotification::ViewVirtualDesktopChanged11(IApplicationView* pView)
+{
     return S_OK;
 }
 

@@ -179,7 +179,7 @@ private:
         // TODO
     }
 
-    virtual void VirtualDesktopNameChanged(IApplicationView* pView, HSTRING name) override
+    virtual void VirtualDesktopNameChanged(Win11::IVirtualDesktop* pDesktop, HSTRING name) override
     {
         // TODO
     }

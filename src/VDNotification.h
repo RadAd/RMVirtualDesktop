@@ -14,7 +14,7 @@ public:
     virtual void VirtualDesktopCreated(Win11::IVirtualDesktop* pDesktop) = 0;
     virtual void VirtualDesktopDestroyed(Win11::IVirtualDesktop* pDesktopDestroyed, Win11::IVirtualDesktop* pDesktopFallback) = 0;
     virtual void VirtualDesktopMoved(Win11::IVirtualDesktop* pDesktop, int64_t oldIndex, int64_t newIndex) = 0;
-    virtual void VirtualDesktopNameChanged(IApplicationView* pView, HSTRING name) = 0;
+    virtual void VirtualDesktopNameChanged(Win11::IVirtualDesktop* pDesktop, HSTRING name) = 0;
     virtual void CurrentVirtualDesktopChanged(Win11::IVirtualDesktop* pDesktopOld, Win11::IVirtualDesktop* pDesktopNew) = 0;
 };
 
@@ -45,9 +45,8 @@ public:
     STDMETHODIMP VirtualDesktopDestroyed(IObjectArray* monitors, Win11::IVirtualDesktop* pDesktopDestroyed, Win11::IVirtualDesktop* pDesktopFallback) override;
     STDMETHODIMP VirtualDesktopIsPerMonitorChanged(_In_ BOOL isPerMonitor) override;
     STDMETHODIMP VirtualDesktopMoved(IObjectArray* monitors, Win11::IVirtualDesktop* pDesktop, int64_t oldIndex, int64_t newIndex) override;
-    STDMETHODIMP VirtualDesktopNameChanged(IApplicationView* pView, HSTRING name) override;
-    //STDMETHODIMP ViewVirtualDesktopChanged(IApplicationView* pView) override;
+    STDMETHODIMP VirtualDesktopNameChanged11(Win11::IVirtualDesktop* pDesktop, HSTRING name) override;
+    STDMETHODIMP ViewVirtualDesktopChanged11(IApplicationView* pView) override;
     STDMETHODIMP CurrentVirtualDesktopChanged(IObjectArray* monitors, Win11::IVirtualDesktop* pDesktopOld, Win11::IVirtualDesktop* pDesktopNew) override;
     STDMETHODIMP VirtualDesktopWallpaperChanged(Win11::IVirtualDesktop* pDesktop, HSTRING name) override;
-
 };

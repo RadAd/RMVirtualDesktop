@@ -216,7 +216,7 @@ int GetDesktopNumber(VDMI* pDesktopManagerInternal, VD* pFindDesktop)
     CComPtr<IObjectArray> pDesktopArray;
     if (pDesktopManagerInternal && SUCCEEDED(GetDesktops(pDesktopManagerInternal, &pDesktopArray)))
     {
-        for (CComPtr<Win10::IVirtualDesktop> pDesktop : ObjectArrayRange<Win10::IVirtualDesktop>(pDesktopArray))
+        for (CComPtr<VD> pDesktop : ObjectArrayRange<VD>(pDesktopArray))
         {
             ++dn;
             if (pDesktop.IsEqualObject(pFindDesktop))
@@ -225,7 +225,7 @@ int GetDesktopNumber(VDMI* pDesktopManagerInternal, VD* pFindDesktop)
             }
         }
     }
-    return dn;
+    return 0;
 }
 
 template <class VD, class VDMI>
