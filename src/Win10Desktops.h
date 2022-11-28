@@ -127,50 +127,50 @@ DECLARE_INTERFACE_IID_(IVirtualDesktopPinnedApps, IUnknown, "4CE81583-1E4C-4632-
 
 namespace Win10 {
 
-MIDL_INTERFACE("FF72FFDD-BE7E-43FC-9C03-AD81681E88E4")
-IVirtualDesktop : public IUnknown
-{
-public:
-    virtual HRESULT STDMETHODCALLTYPE IsViewVisible(
+    MIDL_INTERFACE("FF72FFDD-BE7E-43FC-9C03-AD81681E88E4")
+        IVirtualDesktop : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE IsViewVisible(
         _In_ IApplicationView* pView,
         _Out_ BOOL* pfVisible) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetID(
-        _Out_ GUID* pGuid) = 0;
-};
+        virtual HRESULT STDMETHODCALLTYPE GetID(
+            _Out_ GUID* pGuid) = 0;
+    };
 
-MIDL_INTERFACE("31EBDE3F-6EC3-4CBD-B9FB-0EF6D09B41F4")
-IVirtualDesktop2: public IVirtualDesktop
-{
-public:
-    virtual HRESULT STDMETHODCALLTYPE GetName(
+    MIDL_INTERFACE("31EBDE3F-6EC3-4CBD-B9FB-0EF6D09B41F4")
+        IVirtualDesktop2: public IVirtualDesktop
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE GetName(
         _Out_ HSTRING* pStr) = 0;
-};
+    };
 
 }
 
 namespace Win11 {
 
-MIDL_INTERFACE("536D3495-B208-4CC9-AE26-DE8111275BF8")
-IVirtualDesktop : public IUnknown
-{
-public:
-    virtual HRESULT STDMETHODCALLTYPE IsViewVisible(
+    MIDL_INTERFACE("536D3495-B208-4CC9-AE26-DE8111275BF8")
+        IVirtualDesktop : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE IsViewVisible(
         _In_ IApplicationView* pView,
         _Out_ BOOL* pfVisible) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetID(
-        _Out_ GUID* pGuid) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetID(
+            _Out_ GUID* pGuid) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetMonitor(
-        _Out_ HMONITOR* pMonitor) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetMonitor(
+            _Out_ HMONITOR* pMonitor) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetName(
-        _Out_ HSTRING* p0) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetName(
+            _Out_ HSTRING* p0) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetWallpaperPath(
-        _Out_ FC_USER_MARSHAL** p0) = 0;
-};
+        virtual HRESULT STDMETHODCALLTYPE GetWallpaperPath(
+            _Out_ FC_USER_MARSHAL** p0) = 0;
+    };
 
 }
 
@@ -182,277 +182,277 @@ enum AdjacentDesktop
 
 namespace Win10 {
 
-MIDL_INTERFACE("F31574D6-B682-4CDC-BD56-1827860ABEC6")
-IVirtualDesktopManagerInternal : public IUnknown
-{
-public:
-    virtual HRESULT STDMETHODCALLTYPE GetCount(
+    MIDL_INTERFACE("F31574D6-B682-4CDC-BD56-1827860ABEC6")
+        IVirtualDesktopManagerInternal : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE GetCount(
         _Out_ UINT* pCount) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE MoveViewToDesktop(
-        _In_ IApplicationView* pView,
-        _In_ IVirtualDesktop* pDesktop) = 0;
+        virtual HRESULT STDMETHODCALLTYPE MoveViewToDesktop(
+            _In_ IApplicationView* pView,
+            _In_ IVirtualDesktop* pDesktop) = 0;
 
-    // Since build 10240
-    virtual HRESULT STDMETHODCALLTYPE CanViewMoveDesktops(
-        _In_ IApplicationView* pView,
-        _Out_ BOOL* pfCanViewMoveDesktops) = 0;
+        // Since build 10240
+        virtual HRESULT STDMETHODCALLTYPE CanViewMoveDesktops(
+            _In_ IApplicationView* pView,
+            _Out_ BOOL* pfCanViewMoveDesktops) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetCurrentDesktop(
-        _Out_ IVirtualDesktop** desktop) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetCurrentDesktop(
+            _Out_ IVirtualDesktop** desktop) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetDesktops(
-        _Out_ IObjectArray** ppDesktops) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetDesktops(
+            _Out_ IObjectArray** ppDesktops) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetAdjacentDesktop(
-        _In_ IVirtualDesktop* pDesktopReference,
-        _In_ AdjacentDesktop uDirection,
-        _Out_ IVirtualDesktop** ppAdjacentDesktop) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetAdjacentDesktop(
+            _In_ IVirtualDesktop* pDesktopReference,
+            _In_ AdjacentDesktop uDirection,
+            _Out_ IVirtualDesktop** ppAdjacentDesktop) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE SwitchDesktop(
-        _In_ IVirtualDesktop* pDesktop) = 0;
+        virtual HRESULT STDMETHODCALLTYPE SwitchDesktop(
+            _In_ IVirtualDesktop* pDesktop) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE CreateDesktopW(
-        _Out_ IVirtualDesktop** ppNewDesktop) = 0;
+        virtual HRESULT STDMETHODCALLTYPE CreateDesktopW(
+            _Out_ IVirtualDesktop** ppNewDesktop) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE RemoveDesktop(
-        _In_ IVirtualDesktop* pRemove,
-        _In_ IVirtualDesktop* pFallbackDesktop) = 0;
+        virtual HRESULT STDMETHODCALLTYPE RemoveDesktop(
+            _In_ IVirtualDesktop* pRemove,
+            _In_ IVirtualDesktop* pFallbackDesktop) = 0;
 
-    // Since build 10240
-    virtual HRESULT STDMETHODCALLTYPE FindDesktop(
-        _In_ GUID* desktopId,
-        _Out_ IVirtualDesktop** ppDesktop) = 0;
+        // Since build 10240
+        virtual HRESULT STDMETHODCALLTYPE FindDesktop(
+            _In_ GUID* desktopId,
+            _Out_ IVirtualDesktop** ppDesktop) = 0;
 
-    // Since build ??
-    virtual HRESULT STDMETHODCALLTYPE Proc13(
-        _In_ IVirtualDesktop* pDesktop,
-        _Out_ IObjectArray** ppDesktops1,
-        _Out_ IObjectArray** ppDesktops2) = 0;
-};
+        // Since build ??
+        virtual HRESULT STDMETHODCALLTYPE Proc13(
+            _In_ IVirtualDesktop* pDesktop,
+            _Out_ IObjectArray** ppDesktops1,
+            _Out_ IObjectArray** ppDesktops2) = 0;
+    };
 
-MIDL_INTERFACE("0F3A72B0-4566-487E-9A33-4ED302F6D6CE")
-IVirtualDesktopManagerInternal2 : public IVirtualDesktopManagerInternal
-{
-public:
-    virtual HRESULT STDMETHODCALLTYPE SetName(
+    MIDL_INTERFACE("0F3A72B0-4566-487E-9A33-4ED302F6D6CE")
+        IVirtualDesktopManagerInternal2 : public IVirtualDesktopManagerInternal
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE SetName(
         _In_ IVirtualDesktop* p0,
-        _In_ HSTRING name) = 0;
-};
+            _In_ HSTRING name) = 0;
+    };
 
-MIDL_INTERFACE("FE538FF5-D53B-4F5A-9DAD-8E72873CB360")
-IVirtualDesktopManagerInternal3 : public IVirtualDesktopManagerInternal2
-{
-public:
-    virtual HRESULT STDMETHODCALLTYPE Proc15(
+    MIDL_INTERFACE("FE538FF5-D53B-4F5A-9DAD-8E72873CB360")
+        IVirtualDesktopManagerInternal3 : public IVirtualDesktopManagerInternal2
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE Proc15(
         _In_ IApplicationView* p0,
         _In_ IApplicationView* p1) = 0;
-};
+    };
 
 }
 
 namespace Win11 {
 
-MIDL_INTERFACE("B2F925B9-5A0F-4D2E-9F4D-2B1507593C10")
-IVirtualDesktopManagerInternal : public IUnknown
-{
-public:
-    virtual HRESULT STDMETHODCALLTYPE GetCount(
-        _In_opt_ HMONITOR monitor,
+    MIDL_INTERFACE("B2F925B9-5A0F-4D2E-9F4D-2B1507593C10")
+        IVirtualDesktopManagerInternal : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE GetCount(
+            _In_opt_ HMONITOR monitor,
         _Out_ UINT* pCount) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE MoveViewToDesktop(
-        _In_ IApplicationView* pView,
-        _In_ IVirtualDesktop* pDesktop) = 0;
+        virtual HRESULT STDMETHODCALLTYPE MoveViewToDesktop(
+            _In_ IApplicationView* pView,
+            _In_ IVirtualDesktop* pDesktop) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE CanViewMoveDesktops(
-        _In_ IApplicationView* pView,
-        _Out_ BOOL* pfCanViewMoveDesktops) = 0;
+        virtual HRESULT STDMETHODCALLTYPE CanViewMoveDesktops(
+            _In_ IApplicationView* pView,
+            _Out_ BOOL* pfCanViewMoveDesktops) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetCurrentDesktop(
-        _In_opt_ HMONITOR monitor,
-        _Out_ IVirtualDesktop** desktop) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetCurrentDesktop(
+            _In_opt_ HMONITOR monitor,
+            _Out_ IVirtualDesktop** desktop) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetAllCurrentDesktops(
-        _Out_ IObjectArray** ppDesktops) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetAllCurrentDesktops(
+            _Out_ IObjectArray** ppDesktops) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetDesktops(
-        _In_opt_ HMONITOR monitor,
-        _Out_ IObjectArray** ppDesktops) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetDesktops(
+            _In_opt_ HMONITOR monitor,
+            _Out_ IObjectArray** ppDesktops) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetAdjacentDesktop(
-        _In_ IVirtualDesktop* pDesktopReference,
-        _In_ AdjacentDesktop uDirection,
-        _Out_ IVirtualDesktop** ppAdjacentDesktop) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetAdjacentDesktop(
+            _In_ IVirtualDesktop* pDesktopReference,
+            _In_ AdjacentDesktop uDirection,
+            _Out_ IVirtualDesktop** ppAdjacentDesktop) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE SwitchDesktop(
-        _In_opt_ HMONITOR monitor,
-        _In_ IVirtualDesktop* pDesktop) = 0;
+        virtual HRESULT STDMETHODCALLTYPE SwitchDesktop(
+            _In_opt_ HMONITOR monitor,
+            _In_ IVirtualDesktop* pDesktop) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE CreateDesktopW(
-        _In_opt_ HMONITOR monitor,
-        _Out_ IVirtualDesktop** ppNewDesktop) = 0;
+        virtual HRESULT STDMETHODCALLTYPE CreateDesktopW(
+            _In_opt_ HMONITOR monitor,
+            _Out_ IVirtualDesktop** ppNewDesktop) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE MoveDesktop(    // New for Win11
-        _In_ IVirtualDesktop* desktop,
-        _In_opt_ HMONITOR monitor,
-        _In_ INT32 index) = 0;
+        virtual HRESULT STDMETHODCALLTYPE MoveDesktop(    // New for Win11
+            _In_ IVirtualDesktop* desktop,
+            _In_opt_ HMONITOR monitor,
+            _In_ INT32 index) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE RemoveDesktop(
-        _In_ IVirtualDesktop* pRemove,
-        _In_ IVirtualDesktop* pFallbackDesktop) = 0;
+        virtual HRESULT STDMETHODCALLTYPE RemoveDesktop(
+            _In_ IVirtualDesktop* pRemove,
+            _In_ IVirtualDesktop* pFallbackDesktop) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE FindDesktop(
-        _In_ GUID* desktopId,
-        _Out_ IVirtualDesktop** ppDesktop) = 0;
+        virtual HRESULT STDMETHODCALLTYPE FindDesktop(
+            _In_ GUID* desktopId,
+            _Out_ IVirtualDesktop** ppDesktop) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetDesktopSwitchIncludeExcludeViews(
-        _In_ IVirtualDesktop* pDesktop,
-        _Out_ IObjectArray** ppDesktops1,
-        _Out_ IObjectArray** ppDesktops2) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetDesktopSwitchIncludeExcludeViews(
+            _In_ IVirtualDesktop* pDesktop,
+            _Out_ IObjectArray** ppDesktops1,
+            _Out_ IObjectArray** ppDesktops2) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE SetName(
-        _In_ IVirtualDesktop* p0,
-        _In_ HSTRING name) = 0;
+        virtual HRESULT STDMETHODCALLTYPE SetName(
+            _In_ IVirtualDesktop* p0,
+            _In_ HSTRING name) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE SetWallpaper(
-        _In_ IVirtualDesktop* p0,
-        _In_ HSTRING name) = 0;
+        virtual HRESULT STDMETHODCALLTYPE SetWallpaper(
+            _In_ IVirtualDesktop* p0,
+            _In_ HSTRING name) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE UpdateWallpaperPathForAllDesktops(
-        _In_ HSTRING name) = 0;
+        virtual HRESULT STDMETHODCALLTYPE UpdateWallpaperPathForAllDesktops(
+            _In_ HSTRING name) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE CopyDesktopState(
-        _In_ IApplicationView* p0,
-        _In_ IApplicationView* p1) = 0;
+        virtual HRESULT STDMETHODCALLTYPE CopyDesktopState(
+            _In_ IApplicationView* p0,
+            _In_ IApplicationView* p1) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE GetDesktopIsPerMonitor(
-        _Out_ BOOL* p0) = 0;
+        virtual HRESULT STDMETHODCALLTYPE GetDesktopIsPerMonitor(
+            _Out_ BOOL* p0) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE SetDesktopIsPerMonitor(
-        _In_ BOOL p0) = 0;
-};
+        virtual HRESULT STDMETHODCALLTYPE SetDesktopIsPerMonitor(
+            _In_ BOOL p0) = 0;
+    };
 
 }
 
 namespace Win10 {
 
-MIDL_INTERFACE("C179334C-4295-40D3-BEA1-C654D965605A")
-IVirtualDesktopNotification : public IUnknown
-{
-public:
-    virtual HRESULT STDMETHODCALLTYPE VirtualDesktopCreated(
+    MIDL_INTERFACE("C179334C-4295-40D3-BEA1-C654D965605A")
+        IVirtualDesktopNotification : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE VirtualDesktopCreated(
         _In_ IVirtualDesktop* pDesktop) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE VirtualDesktopDestroyBegin(
-        _In_ IVirtualDesktop* pDesktopDestroyed,
-        _In_ IVirtualDesktop* pDesktopFallback) = 0;
+        virtual HRESULT STDMETHODCALLTYPE VirtualDesktopDestroyBegin(
+            _In_ IVirtualDesktop* pDesktopDestroyed,
+            _In_ IVirtualDesktop* pDesktopFallback) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE VirtualDesktopDestroyFailed(
-        _In_ IVirtualDesktop* pDesktopDestroyed,
-        _In_ IVirtualDesktop* pDesktopFallback) = 0;
+        virtual HRESULT STDMETHODCALLTYPE VirtualDesktopDestroyFailed(
+            _In_ IVirtualDesktop* pDesktopDestroyed,
+            _In_ IVirtualDesktop* pDesktopFallback) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE VirtualDesktopDestroyed(
-        _In_ IVirtualDesktop* pDesktopDestroyed,
-        _In_ IVirtualDesktop* pDesktopFallback) = 0;
+        virtual HRESULT STDMETHODCALLTYPE VirtualDesktopDestroyed(
+            _In_ IVirtualDesktop* pDesktopDestroyed,
+            _In_ IVirtualDesktop* pDesktopFallback) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE ViewVirtualDesktopChanged(
-        _In_ IApplicationView* pView) = 0;
+        virtual HRESULT STDMETHODCALLTYPE ViewVirtualDesktopChanged(
+            _In_ IApplicationView* pView) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE CurrentVirtualDesktopChanged(
-        _In_ IVirtualDesktop* pDesktopOld,
-        _In_ IVirtualDesktop* pDesktopNew) = 0;
-};
+        virtual HRESULT STDMETHODCALLTYPE CurrentVirtualDesktopChanged(
+            _In_ IVirtualDesktop* pDesktopOld,
+            _In_ IVirtualDesktop* pDesktopNew) = 0;
+    };
 
-const __declspec(selectany) IID& IID_IVirtualDesktopNotification = __uuidof(IVirtualDesktopNotification);
+    const __declspec(selectany) IID& IID_IVirtualDesktopNotification = __uuidof(IVirtualDesktopNotification);
 
-MIDL_INTERFACE("1BA7CF30-3591-43FA-ABFA-4AAF7ABEEDB7")
-IVirtualDesktopNotification2 : public IVirtualDesktopNotification
-{
-public:
-    virtual HRESULT STDMETHODCALLTYPE VirtualDesktopNameChanged(
+    MIDL_INTERFACE("1BA7CF30-3591-43FA-ABFA-4AAF7ABEEDB7")
+        IVirtualDesktopNotification2 : public IVirtualDesktopNotification
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE VirtualDesktopNameChanged(
         _In_ IVirtualDesktop* pDesktop,
-        _In_ HSTRING p1) = 0;
-};
+            _In_ HSTRING p1) = 0;
+    };
 
-MIDL_INTERFACE("0CD45E71-D927-4F15-8B0A-8FEF525337BF")
-IVirtualDesktopNotificationService : public IUnknown
-{
-public:
-    virtual HRESULT STDMETHODCALLTYPE Register(
-        _In_ IVirtualDesktopNotification * pNotification,
-        _Out_ DWORD * pdwCookie) = 0;
+    MIDL_INTERFACE("0CD45E71-D927-4F15-8B0A-8FEF525337BF")
+        IVirtualDesktopNotificationService : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE Register(
+            _In_ IVirtualDesktopNotification * pNotification,
+            _Out_ DWORD * pdwCookie) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE Unregister(
-        _In_ DWORD dwCookie) = 0;
-};
+        virtual HRESULT STDMETHODCALLTYPE Unregister(
+            _In_ DWORD dwCookie) = 0;
+    };
 
 }
 
 namespace Win11 {
 
-MIDL_INTERFACE("CD403E52-DEED-4C13-B437-B98380F2B1E8")
-IVirtualDesktopNotification : public IUnknown
-{
-public:
-    virtual HRESULT STDMETHODCALLTYPE VirtualDesktopCreated(
+    MIDL_INTERFACE("CD403E52-DEED-4C13-B437-B98380F2B1E8")
+        IVirtualDesktopNotification : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE VirtualDesktopCreated(
         _In_ IObjectArray* monitors,
         _In_ IVirtualDesktop* pDesktop) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE VirtualDesktopDestroyBegin(
-        _In_ IObjectArray* monitors,
-        _In_ IVirtualDesktop* pDesktopDestroyed,
-        _In_ IVirtualDesktop* pDesktopFallback) = 0;
+        virtual HRESULT STDMETHODCALLTYPE VirtualDesktopDestroyBegin(
+            _In_ IObjectArray* monitors,
+            _In_ IVirtualDesktop* pDesktopDestroyed,
+            _In_ IVirtualDesktop* pDesktopFallback) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE VirtualDesktopDestroyFailed(
-        _In_ IObjectArray* monitors,
-        _In_ IVirtualDesktop* pDesktopDestroyed,
-        _In_ IVirtualDesktop* pDesktopFallback) = 0;
+        virtual HRESULT STDMETHODCALLTYPE VirtualDesktopDestroyFailed(
+            _In_ IObjectArray* monitors,
+            _In_ IVirtualDesktop* pDesktopDestroyed,
+            _In_ IVirtualDesktop* pDesktopFallback) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE VirtualDesktopDestroyed(
-        _In_ IObjectArray* monitors,
-        _In_ IVirtualDesktop* pDesktopDestroyed,
-        _In_ IVirtualDesktop* pDesktopFallback) = 0;
+        virtual HRESULT STDMETHODCALLTYPE VirtualDesktopDestroyed(
+            _In_ IObjectArray* monitors,
+            _In_ IVirtualDesktop* pDesktopDestroyed,
+            _In_ IVirtualDesktop* pDesktopFallback) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE VirtualDesktopIsPerMonitorChanged(
-        _In_ BOOL isPerMonitor) = 0;
+        virtual HRESULT STDMETHODCALLTYPE VirtualDesktopIsPerMonitorChanged(
+            _In_ BOOL isPerMonitor) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE VirtualDesktopMoved(
-        _In_ IObjectArray* monitors,
-        _In_ IVirtualDesktop* pDesktop,
-        _In_ int64_t oldIndex,
-        _In_ int64_t newIndex) = 0;
+        virtual HRESULT STDMETHODCALLTYPE VirtualDesktopMoved(
+            _In_ IObjectArray* monitors,
+            _In_ IVirtualDesktop* pDesktop,
+            _In_ int64_t oldIndex,
+            _In_ int64_t newIndex) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE VirtualDesktopNameChanged(
-        _In_ IApplicationView* pView,
-        _In_ HSTRING name) = 0;
+        virtual HRESULT STDMETHODCALLTYPE VirtualDesktopNameChanged11(
+            _In_ IVirtualDesktop* pDesktop,
+            _In_ HSTRING name) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE ViewVirtualDesktopChanged(
-        _In_ IApplicationView* pView) = 0;
+        virtual HRESULT STDMETHODCALLTYPE ViewVirtualDesktopChanged11(
+            _In_ IApplicationView* pView) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE CurrentVirtualDesktopChanged(
-        _In_ IObjectArray* monitors,
-        _In_ IVirtualDesktop* pDesktopOld,
-        _In_ IVirtualDesktop* pDesktopNew) = 0;
+        virtual HRESULT STDMETHODCALLTYPE CurrentVirtualDesktopChanged(
+            _In_ IObjectArray* monitors,
+            _In_ IVirtualDesktop* pDesktopOld,
+            _In_ IVirtualDesktop* pDesktopNew) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE VirtualDesktopWallpaperChanged(
-        _In_ IVirtualDesktop* pDesktop,
-        _In_ HSTRING name) = 0;
-};
+        virtual HRESULT STDMETHODCALLTYPE VirtualDesktopWallpaperChanged(
+            _In_ IVirtualDesktop* pDesktop,
+            _In_ HSTRING name) = 0;
+    };
 
-const __declspec(selectany) IID& IID_IVirtualDesktopNotification = __uuidof(IVirtualDesktopNotification);
+    const __declspec(selectany) IID& IID_IVirtualDesktopNotification = __uuidof(IVirtualDesktopNotification);
 
-MIDL_INTERFACE("0CD45E71-D927-4F15-8B0A-8FEF525337BF")
-IVirtualDesktopNotificationService : public IUnknown
-{
-public:
-    virtual HRESULT STDMETHODCALLTYPE Register(
-        _In_ IVirtualDesktopNotification * pNotification,
-        _Out_ DWORD * pdwCookie) = 0;
+    MIDL_INTERFACE("0CD45E71-D927-4F15-8B0A-8FEF525337BF")
+        IVirtualDesktopNotificationService : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE Register(
+            _In_ IVirtualDesktopNotification * pNotification,
+            _Out_ DWORD * pdwCookie) = 0;
 
-    virtual HRESULT STDMETHODCALLTYPE Unregister(
-        _In_ DWORD dwCookie) = 0;
-};
+        virtual HRESULT STDMETHODCALLTYPE Unregister(
+            _In_ DWORD dwCookie) = 0;
+    };
 
 }
 
