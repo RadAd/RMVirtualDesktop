@@ -199,7 +199,7 @@ int GetDesktopCount(LogF* pLog, void* logdata)
     const CComPtr<Win11::IVirtualDesktopManagerInternal>& pDesktopManagerInternal11 = GetDesktopManagerInternal<Win11::IVirtualDesktopManagerInternal>(pLog, logdata);
     if (pDesktopManagerInternal10)
         return GetDesktopCount(pLog, logdata, static_cast<Win10::IVirtualDesktopManagerInternal*>(pDesktopManagerInternal10));
-    else if (pDesktopManagerInternal10)
+    else if (pDesktopManagerInternal11)
         return GetDesktopCount(pLog, logdata, static_cast<Win11::IVirtualDesktopManagerInternal*>(pDesktopManagerInternal11));
     else
     {
