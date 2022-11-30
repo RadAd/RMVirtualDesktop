@@ -333,12 +333,13 @@ void CreateDesktop(LogF* pLog, void* logdata)
 template <class VD, class VDMI>
 void RemoveDesktop(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal, int d)
 {
-    CComPtr<VD> pDesktop = GetDesktop<VD>(pLog, logdata, pDesktopManagerInternal, d);
     CComPtr<VD> pCurrentDesktop;
     LogHR(pLog, logdata, GetCurrentDesktop(pDesktopManagerInternal, &pCurrentDesktop), L"GetCurrentDesktop");
+    CComPtr<VD> pDesktop = d == -1 ? pCurrentDesktop : GetDesktop<VD>(pLog, logdata, pDesktopManagerInternal, d);
     CComPtr<VD> pFallbackDesktop = pCurrentDesktop;
     if (!pFallbackDesktop || pFallbackDesktop.IsEqualObject(pDesktop))
     {
+        pFallbackDesktop.Release();
         LogHR(pLog, logdata, pDesktopManagerInternal->GetAdjacentDesktop(pCurrentDesktop, AdjacentDesktop::RightDirection, &pFallbackDesktop), TYPE_E_OUTOFBOUNDS, L"GetAdjacentDesktop");
         if (!pFallbackDesktop)
             LogHR(pLog, logdata, pDesktopManagerInternal->GetAdjacentDesktop(pCurrentDesktop, AdjacentDesktop::LeftDirection, &pFallbackDesktop), TYPE_E_OUTOFBOUNDS, L"GetAdjacentDesktop");
