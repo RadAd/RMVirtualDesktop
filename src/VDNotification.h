@@ -9,6 +9,7 @@ public:
     virtual void VirtualDesktopCreated(Win10::IVirtualDesktop* pDesktop) = 0;
     virtual void VirtualDesktopDestroyed(Win10::IVirtualDesktop* pDesktopDestroyed, Win10::IVirtualDesktop* pDesktopFallback) = 0;
     virtual void CurrentVirtualDesktopChanged(Win10::IVirtualDesktop* pDesktopOld, Win10::IVirtualDesktop* pDesktopNew) = 0;
+    virtual void VirtualDesktopNameChanged(Win10::IVirtualDesktop* pDesktop, HSTRING name) = 0;
 
     // Win11::IVirtualDesktopNotification
     virtual void VirtualDesktopCreated(Win11::IVirtualDesktop* pDesktop) = 0;
@@ -18,7 +19,7 @@ public:
     virtual void CurrentVirtualDesktopChanged(Win11::IVirtualDesktop* pDesktopOld, Win11::IVirtualDesktop* pDesktopNew) = 0;
 };
 
-class VirtualDesktopNotification : public Win10::IVirtualDesktopNotification, public Win11::IVirtualDesktopNotification
+class VirtualDesktopNotification : public Win10::IVirtualDesktopNotification2, public Win11::IVirtualDesktopNotification
 {
 private:
     IVDNotification* _notify;
@@ -37,6 +38,8 @@ public:
     STDMETHODIMP VirtualDesktopDestroyed(Win10::IVirtualDesktop* pDesktopDestroyed, Win10::IVirtualDesktop* pDesktopFallback) override;
     STDMETHODIMP ViewVirtualDesktopChanged(IApplicationView* pView) override;
     STDMETHODIMP CurrentVirtualDesktopChanged(Win10::IVirtualDesktop* pDesktopOld, Win10::IVirtualDesktop* pDesktopNew) override;
+    // Win10::IVirtualDesktopNotification2
+    STDMETHODIMP VirtualDesktopNameChanged(Win10::IVirtualDesktop* pDesktop, HSTRING name) override;
 
     // Win10::IVirtualDesktopNotification
     STDMETHODIMP VirtualDesktopCreated(IObjectArray* monitors, Win11::IVirtualDesktop* pDesktop) override;

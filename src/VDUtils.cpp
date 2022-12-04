@@ -105,22 +105,6 @@ void Unregister(LogF* pLog, void* logdata, DWORD idVirtualDesktopNotification)
         pLog(logdata, LOG_ERROR, L"GetDesktopManagerInternal\n");
 }
 
-CComPtr<Win10::IVirtualDesktop> GetCurrentDesktop10(LogF* pLog, void* logdata)
-{
-    const CComPtr<Win10::IVirtualDesktopManagerInternal>& pDesktopManagerInternal = GetDesktopManagerInternal<Win10::IVirtualDesktopManagerInternal>(pLog, logdata);
-    CComPtr<Win10::IVirtualDesktop> pCurrentDesktop;
-    LogHR(pLog, logdata, pDesktopManagerInternal->GetCurrentDesktop(&pCurrentDesktop), L"GetCurrentDesktop");
-    return pCurrentDesktop;
-}
-
-CComPtr<Win11::IVirtualDesktop> GetCurrentDesktop11(LogF* pLog, void* logdata)
-{
-    const CComPtr<Win11::IVirtualDesktopManagerInternal>& pDesktopManagerInternal = GetDesktopManagerInternal<Win11::IVirtualDesktopManagerInternal>(pLog, logdata);
-    CComPtr<Win11::IVirtualDesktop> pCurrentDesktop;
-    LogHR(pLog, logdata, pDesktopManagerInternal->GetCurrentDesktop(NULL, &pCurrentDesktop), L"GetCurrentDesktop");
-    return pCurrentDesktop;
-}
-
 template <class VD, class VDMI>
 CComPtr<VD> GetDesktop(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal, int d)
 {
@@ -358,4 +342,20 @@ void RemoveDesktop(LogF* pLog, void* logdata, int d)
         RemoveDesktop<Win11::IVirtualDesktop>(pLog, logdata, static_cast<Win11::IVirtualDesktopManagerInternal*>(pDesktopManagerInternal11), d);
     else if (pLog)
         pLog(logdata, LOG_ERROR, L"GetDesktopManagerInternal\n");
+}
+
+bool IsCurrentDesktop(LogF* pLog, void* logdata, Win10::IVirtualDesktop* pDesktop)
+{
+    const CComPtr<Win10::IVirtualDesktopManagerInternal>& pDesktopManagerInternal10 = GetDesktopManagerInternal<Win10::IVirtualDesktopManagerInternal>(pLog, logdata);
+    CComPtr<Win10::IVirtualDesktop> pCurrentDesktop;
+    LogHR(pLog, logdata, pDesktopManagerInternal10->GetCurrentDesktop(&pCurrentDesktop), L"GetCurrentDesktop");
+    return pCurrentDesktop.IsEqualObject(pDesktop);
+}
+
+bool IsCurrentDesktop(LogF* pLog, void* logdata, Win11::IVirtualDesktop* pDesktop)
+{
+    const CComPtr<Win11::IVirtualDesktopManagerInternal>& pDesktopManagerInternal11 = GetDesktopManagerInternal<Win11::IVirtualDesktopManagerInternal>(pLog, logdata);
+    CComPtr<Win11::IVirtualDesktop> pCurrentDesktop;
+    LogHR(pLog, logdata, pDesktopManagerInternal11->GetCurrentDesktop(NULL, &pCurrentDesktop), L"GetCurrentDesktop");
+    return pCurrentDesktop.IsEqualObject(pDesktop);
 }

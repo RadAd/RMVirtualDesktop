@@ -20,3 +20,6 @@ void SwitchDesktop(LogF* pLog, void* logdata, enum AdjacentDesktop direction);
 
 void CreateDesktop(LogF* pLog, void* logdata);
 void RemoveDesktop(LogF* pLog, void* logdata, int d);
+
+bool IsCurrentDesktop(LogF* pLog, void* logdata, Win10::IVirtualDesktop* pDesktop);
+bool IsCurrentDesktop(LogF* pLog, void* logdata, Win11::IVirtualDesktop* pDesktop);

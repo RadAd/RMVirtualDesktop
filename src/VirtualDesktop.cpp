@@ -150,8 +150,17 @@ private:
     {
         if (type == MeasureType::CURRENT)
         {
-            //assert(GetCurrentDesktop10(RmLogF, rm).IsEqualObject(pDesktopNew));
+            assert(IsCurrentDesktop(RmLogF, rm, pDesktopNew));
             UpdateCurrent(pDesktopNew);
+            UpdateMeasure();
+        }
+    }
+
+    virtual void VirtualDesktopNameChanged(Win10::IVirtualDesktop* pDesktop, HSTRING name) override
+    {
+        if (type == MeasureType::CURRENT && IsCurrentDesktop(RmLogF, rm, pDesktop))
+        {
+            UpdateCurrent(pDesktop);
             UpdateMeasure();
         }
     }
@@ -181,14 +190,18 @@ private:
 
     virtual void VirtualDesktopNameChanged(Win11::IVirtualDesktop* pDesktop, HSTRING name) override
     {
-        // TODO
+        if (type == MeasureType::CURRENT && IsCurrentDesktop(RmLogF, rm, pDesktop))
+        {
+            UpdateCurrent(pDesktop);
+            UpdateMeasure();
+        }
     }
 
     virtual void CurrentVirtualDesktopChanged(Win11::IVirtualDesktop* pDesktopOld, Win11::IVirtualDesktop* pDesktopNew) override
     {
         if (type == MeasureType::CURRENT)
         {
-            //assert(GetCurrentDesktop11(RmLogF, rm).IsEqualObject(pDesktopNew));
+            assert(IsCurrentDesktop(RmLogF, rm, pDesktopNew));
             UpdateCurrent(pDesktopNew);
             UpdateMeasure();
         }
@@ -252,14 +265,8 @@ private:
     }
 };
 
-//static HRESULT g_coinit = S_OK;
-
 PLUGIN_EXPORT void Initialize(void** data, void* rm)
 {
-#if 0
-    if (FAILED(g_coinit = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED)))
-        RmLogF(rm, LOG_ERROR, L"FAILED CoInitialize %d\n", g_coinit);
-#endif
 
     Measure* measure = new Measure(rm);
     *data = measure;
@@ -303,9 +310,4 @@ PLUGIN_EXPORT void Finalize(void* data)
     const Measure* measure = (Measure*)data;
     delete measure;
     measure = nullptr;
-
-#if 0
-    if (g_coinit == S_OK)
-        CoUninitialize();
-#endif
 }
