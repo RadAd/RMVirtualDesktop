@@ -97,6 +97,28 @@ public:
                 else
                     RmLogF(rm, LOG_ERROR, L"Arg expected \"%s\"", argv[0]);
             }
+            else if (_wcsicmp(argv[0], L"SetName") == 0)
+            {
+                if (argc > 2)
+                {
+                    int d = _wtoi(argv[1]);
+                    LPCWSTR name = argv[2];
+                    SetDesktopName(RmLogF, rm, d, name);
+                }
+                else
+                    RmLogF(rm, LOG_ERROR, L"Args expected \"%s\"", argv[0]);
+            }
+            else if (_wcsicmp(argv[0], L"SetWallpaper") == 0)
+            {
+                if (argc > 2)
+                {
+                    int d = _wtoi(argv[1]);
+                    LPCWSTR wallpaper = argv[2];
+                    SetDesktopWallpaper(RmLogF, rm, d, wallpaper);
+                }
+                else
+                    RmLogF(rm, LOG_ERROR, L"Args expected \"%s\"", argv[0]);
+            }
             else
                 RmLogF(rm, LOG_ERROR, L"Invalid Bang \"%s\"", argv[0]);
         }
