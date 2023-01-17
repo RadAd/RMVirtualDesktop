@@ -109,7 +109,13 @@ template <class VD, class VDMI>
 CComPtr<VD> GetDesktop(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal, int d)
 {
     CComPtr<IObjectArray> pDesktopArray;
-    if (pDesktopManagerInternal && SUCCEEDED(GetDesktops(pDesktopManagerInternal, &pDesktopArray)))
+    if (d == -1)
+    {
+        CComPtr<VD> pCurrentDesktop;
+        LogHR(pLog, logdata, GetCurrentDesktop(pDesktopManagerInternal, &pCurrentDesktop), L"GetCurrentDesktop");
+        return pCurrentDesktop;
+    }
+    else if (pDesktopManagerInternal && SUCCEEDED(GetDesktops(pDesktopManagerInternal, &pDesktopArray)))
     {
         CComPtr<VD> pDesktop;
         LogHR(pLog, logdata, pDesktopArray->GetAt(d - 1, IID_PPV_ARGS(&pDesktop)), E_INVALIDARG, L"IObjectArray GetAt");
@@ -248,7 +254,7 @@ int GetDesktopNumber(LogF* pLog, void* logdata, Win11::IVirtualDesktop* pFindDes
     return GetDesktopNumber(static_cast<Win11::IVirtualDesktopManagerInternal*>(pDesktopManagerInternal11), pFindDesktop);
 }
 
-template<class VD, class VDMI>
+template<class VD, class VD2 = VD, class VDMI>
 std::wstring GetDesktopName(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal, int d)
 {
     std::wstring ret;
@@ -256,8 +262,10 @@ std::wstring GetDesktopName(LogF* pLog, void* logdata, VDMI* pDesktopManagerInte
     CComPtr<VD> pDesktop = GetDesktop<VD>(pLog, logdata, pDesktopManagerInternal, d);
     if (pDesktop)
     {
+        CComQIPtr<VD2> pDesktop2 = pDesktop;
+
         HSTRING s = NULL;
-        LogHR(pLog, logdata, pDesktop->GetName(&s), L"GetDesktopName");
+        LogHR(pLog, logdata, pDesktop2->GetName(&s), L"GetDesktopName");
 
         if (s != NULL)
         {
@@ -281,9 +289,54 @@ std::wstring GetDesktopName(LogF* pLog, void* logdata, int d)
     const CComPtr<Win10::IVirtualDesktopManagerInternal>& pDesktopManagerInternal10 = GetDesktopManagerInternal<Win10::IVirtualDesktopManagerInternal>(pLog, logdata);
     const CComPtr<Win11::IVirtualDesktopManagerInternal>& pDesktopManagerInternal11 = GetDesktopManagerInternal<Win11::IVirtualDesktopManagerInternal>(pLog, logdata);
     if (pDesktopManagerInternal10)
-        return GetDesktopName<Win10::IVirtualDesktop2>(pLog, logdata, static_cast<Win10::IVirtualDesktopManagerInternal*>(pDesktopManagerInternal10), d);
+        return GetDesktopName<Win10::IVirtualDesktop, Win10::IVirtualDesktop2>(pLog, logdata, static_cast<Win10::IVirtualDesktopManagerInternal*>(pDesktopManagerInternal10), d);
     else if (pDesktopManagerInternal11)
         return GetDesktopName<Win11::IVirtualDesktop>(pLog, logdata, static_cast<Win11::IVirtualDesktopManagerInternal*>(pDesktopManagerInternal11), d);
+    else
+    {
+        if (pLog)
+            pLog(logdata, LOG_ERROR, L"GetDesktopManagerInternal\n");
+
+        return {};
+    }
+}
+
+template<class VD, class VDMI>
+std::wstring GetDesktopWallpaper(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal, int d)
+{
+    std::wstring ret;
+
+    CComPtr<VD> pDesktop = GetDesktop<VD>(pLog, logdata, pDesktopManagerInternal, d);
+    if (pDesktop)
+    {
+        HSTRING s = NULL;
+        LogHR(pLog, logdata, pDesktop->GetWallpaperPath(&s), L"GetDesktopName");
+
+        if (s != NULL)
+        {
+            ret = WindowsGetStringRawBuffer(s, nullptr);
+
+            WindowsDeleteString(s);
+        }
+        else
+        {
+            WCHAR buffer[128];
+            _snwprintf_s(buffer, _TRUNCATE, L"Desktop %d", GetDesktopNumber(pDesktopManagerInternal, static_cast<VD*>(pDesktop)));
+            ret = buffer;
+        }
+    }
+
+    return ret;
+}
+
+std::wstring GetDesktopWallpaper(LogF* pLog, void* logdata, int d)
+{
+    const CComPtr<Win10::IVirtualDesktopManagerInternal>& pDesktopManagerInternal10 = GetDesktopManagerInternal<Win10::IVirtualDesktopManagerInternal>(pLog, logdata);
+    const CComPtr<Win11::IVirtualDesktopManagerInternal>& pDesktopManagerInternal11 = GetDesktopManagerInternal<Win11::IVirtualDesktopManagerInternal>(pLog, logdata);
+    if (pDesktopManagerInternal10)
+        return {}; // GetDesktopWallpaper<Win10::IVirtualDesktop2>(pLog, logdata, static_cast<Win10::IVirtualDesktopManagerInternal*>(pDesktopManagerInternal10), d);
+    else if (pDesktopManagerInternal11)
+        return GetDesktopWallpaper<Win11::IVirtualDesktop>(pLog, logdata, static_cast<Win11::IVirtualDesktopManagerInternal*>(pDesktopManagerInternal11), d);
     else
     {
         if (pLog)

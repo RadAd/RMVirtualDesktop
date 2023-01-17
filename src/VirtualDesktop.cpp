@@ -104,11 +104,39 @@ public:
 
     LPCWSTR Name(const int argc, const LPWSTR* argv) const
     {
-        if (argc == 1)
+        if (argc == 0)
+        {
+            buffer.clear();
+            buffer = GetDesktopName(RmLogF, rm, -1);
+            //return buffer.empty() ? nullptr : buffer.c_str();
+            return buffer.c_str();
+        }
+        else if (argc == 1)
         {
             buffer.clear();
             int d = _wtoi(argv[0]);
             buffer = GetDesktopName(RmLogF, rm, d);
+            //return buffer.empty() ? nullptr : buffer.c_str();
+            return buffer.c_str();
+        }
+        else
+            return nullptr;
+    }
+
+    LPCWSTR Wallpaper(const int argc, const LPWSTR* argv) const
+    {
+        if (argc == 0)
+        {
+            buffer.clear();
+            buffer = GetDesktopWallpaper(RmLogF, rm, -1);
+            //return buffer.empty() ? nullptr : buffer.c_str();
+            return buffer.c_str();
+        }
+        else if (argc == 1)
+        {
+            buffer.clear();
+            int d = _wtoi(argv[0]);
+            buffer = GetDesktopWallpaper(RmLogF, rm, d);
             //return buffer.empty() ? nullptr : buffer.c_str();
             return buffer.c_str();
         }
@@ -303,6 +331,12 @@ PLUGIN_EXPORT LPCWSTR Name(void* data, const int argc, const LPWSTR argv[])
 {
     const Measure* measure = (Measure*) data;
     return measure->Name(argc, argv);
+}
+
+PLUGIN_EXPORT LPCWSTR Wallpaper(void* data, const int argc, const LPWSTR argv[])
+{
+    const Measure* measure = (Measure*) data;
+    return measure->Wallpaper(argc, argv);
 }
 
 PLUGIN_EXPORT void Finalize(void* data)

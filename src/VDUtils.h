@@ -15,6 +15,7 @@ int GetCurrentDesktopNumber(LogF* pLog, void* logdata);
 int GetDesktopNumber(LogF* pLog, void* logdata, Win10::IVirtualDesktop* pFindDesktop);
 int GetDesktopNumber(LogF* pLog, void* logdata, Win11::IVirtualDesktop* pFindDesktop);
 std::wstring GetDesktopName(LogF* pLog, void* logdata, int d);
+std::wstring GetDesktopWallpaper(LogF* pLog, void* logdata, int d);
 void SwitchDesktop(LogF* pLog, void* logdata, int d);
 void SwitchDesktop(LogF* pLog, void* logdata, enum AdjacentDesktop direction);
 

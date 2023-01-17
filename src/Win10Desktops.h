@@ -10,8 +10,6 @@
 #include <inspectable.h>
 #include <ObjectArray.h>
 
-#define FC_USER_MARSHAL void
-
 class DECLSPEC_UUID("C2F03A33-21F5-47FA-B4BB-156362A2F239") ImmersiveShell;
 const CLSID CLSID_ImmersiveShell = __uuidof(ImmersiveShell);
 
@@ -169,7 +167,7 @@ namespace Win11 {
             _Out_ HSTRING* p0) = 0;
 
         virtual HRESULT STDMETHODCALLTYPE GetWallpaperPath(
-            _Out_ FC_USER_MARSHAL** p0) = 0;
+            _Out_ HSTRING* p0) = 0;
     };
 
 }
