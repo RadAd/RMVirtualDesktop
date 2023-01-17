@@ -1,6 +1,9 @@
 [Version 1.4]
 Get wallpaper:
 MeasureVirtualDesktop:Wallpaper
+New bangs:
+SetName [desktop_num] [new_name]
+SetWallpaper [desktop_num] [new_wallpaper]
 
 [Version 1.3]
 Create Window 11 version
