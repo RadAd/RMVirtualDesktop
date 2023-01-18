@@ -143,7 +143,7 @@ public:
         {
             buffer.clear();
             buffer = GetDesktopName(RmLogF, rm, -1);
-            RmLogF(rm, LOG_ERROR, L"Name \"%s\"", buffer.c_str());
+            RmLogF(rm, LOG_DEBUG, L"Name \"%s\"", buffer.c_str());
             //return buffer.empty() ? nullptr : buffer.c_str();
             return buffer.c_str();
         }
@@ -152,7 +152,7 @@ public:
             buffer.clear();
             int d = _wtoi(argv[0]);
             buffer = GetDesktopName(RmLogF, rm, d);
-            RmLogF(rm, LOG_ERROR, L"Name %d ret \"%s\"", d, buffer.c_str());
+            RmLogF(rm, LOG_DEBUG, L"Name %d ret \"%s\"", d, buffer.c_str());
             //return buffer.empty() ? nullptr : buffer.c_str();
             return buffer.c_str();
         }
@@ -166,7 +166,7 @@ public:
         {
             buffer.clear();
             buffer = GetDesktopWallpaper(RmLogF, rm, -1);
-            RmLogF(rm, LOG_ERROR, L"Wallpaper ret \"%s\"", buffer.c_str());
+            RmLogF(rm, LOG_DEBUG, L"Wallpaper ret \"%s\"", buffer.c_str());
             //return buffer.empty() ? nullptr : buffer.c_str();
             return buffer.c_str();
         }
@@ -175,7 +175,7 @@ public:
             buffer.clear();
             int d = _wtoi(argv[0]);
             buffer = GetDesktopWallpaper(RmLogF, rm, d);
-            RmLogF(rm, LOG_ERROR, L"Wallpaper %d ret \"%s\"", d, buffer.c_str());
+            RmLogF(rm, LOG_DEBUG, L"Wallpaper %d ret \"%s\"", d, buffer.c_str());
             //return buffer.empty() ? nullptr : buffer.c_str();
             return buffer.c_str();
         }
