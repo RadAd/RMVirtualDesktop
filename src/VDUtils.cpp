@@ -112,10 +112,10 @@ CComPtr<VD> GetDesktop(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal,
     if (d == -1)
     {
         CComPtr<VD> pCurrentDesktop;
-        LogHR(pLog, logdata, GetCurrentDesktop(pDesktopManagerInternal, &pCurrentDesktop), L"GetCurrentDesktop");
+        LogHR(pLog, logdata, pDesktopManagerInternal->GetCurrentDesktop(&pCurrentDesktop), L"GetCurrentDesktop");
         return pCurrentDesktop;
     }
-    else if (pDesktopManagerInternal && SUCCEEDED(GetDesktops(pDesktopManagerInternal, &pDesktopArray)))
+    else if (pDesktopManagerInternal && SUCCEEDED(pDesktopManagerInternal->GetDesktops(&pDesktopArray)))
     {
         CComPtr<VD> pDesktop;
         LogHR(pLog, logdata, pDesktopArray->GetAt(d - 1, IID_PPV_ARGS(&pDesktop)), E_INVALIDARG, L"IObjectArray GetAt");
@@ -130,7 +130,7 @@ void SwitchDesktop(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal, int
 {
     CComPtr<VD> pDesktop = GetDesktop<VD>(pLog, logdata, pDesktopManagerInternal, d);
     if (pDesktop)
-        LogHR(pLog, logdata, SwitchDesktop(pDesktopManagerInternal, static_cast<VD*>(pDesktop)), L"SwitchDesktop");
+        LogHR(pLog, logdata, SwitchDesktop(pDesktopManagerInternal, static_cast<VD*>(pDesktop), false), L"SwitchDesktop");
 }
 
 void SwitchDesktop(LogF* pLog, void* logdata, int d)
@@ -149,11 +149,11 @@ template<class VD, class VDMI>
 void SwitchDesktop(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal, enum AdjacentDesktop direction)
 {
     CComPtr<VD> pCurrentDesktop;
-    LogHR(pLog, logdata, GetCurrentDesktop(pDesktopManagerInternal, &pCurrentDesktop), L"GetCurrentDesktop");
+    LogHR(pLog, logdata, pDesktopManagerInternal->GetCurrentDesktop(&pCurrentDesktop), L"GetCurrentDesktop");
     CComPtr<VD> pDesktop;
     LogHR(pLog, logdata, pDesktopManagerInternal->GetAdjacentDesktop(pCurrentDesktop, direction, &pDesktop), TYPE_E_OUTOFBOUNDS, L"GetAdjacentDesktop");
     if (pDesktop)
-        LogHR(pLog, logdata, SwitchDesktop(pDesktopManagerInternal, static_cast<VD*>(pDesktop)), L"SwitchDesktop");
+        LogHR(pLog, logdata, SwitchDesktop(pDesktopManagerInternal, static_cast<VD*>(pDesktop), false), L"SwitchDesktop");
 }
 
 void SwitchDesktop(LogF* pLog, void* logdata, enum AdjacentDesktop direction)
@@ -172,7 +172,7 @@ template <class VDMI>
 int GetDesktopCount(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal)
 {
     CComPtr<IObjectArray> pDesktopArray;
-    if (SUCCEEDED(GetDesktops(pDesktopManagerInternal, &pDesktopArray)))
+    if (SUCCEEDED(pDesktopManagerInternal->GetDesktops(&pDesktopArray)))
     {
         UINT count;
         if (!LogHR(pLog, logdata, pDesktopArray->GetCount(&count), L"GetDesktopCount"))
@@ -204,7 +204,7 @@ int GetDesktopNumber(VDMI* pDesktopManagerInternal, VD* pFindDesktop)
 {
     int dn = 0;
     CComPtr<IObjectArray> pDesktopArray;
-    if (pDesktopManagerInternal && SUCCEEDED(GetDesktops(pDesktopManagerInternal, &pDesktopArray)))
+    if (pDesktopManagerInternal && SUCCEEDED(pDesktopManagerInternal->GetDesktops(&pDesktopArray)))
     {
         for (CComPtr<VD> pDesktop : ObjectArrayRange<VD>(pDesktopArray))
         {
@@ -222,7 +222,7 @@ template <class VD, class VDMI>
 int GetCurrentDesktopNumber(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal)
 {
     CComPtr<VD> pCurrentDesktop;
-    LogHR(pLog, logdata, GetCurrentDesktop(pDesktopManagerInternal, &pCurrentDesktop), L"GetCurrentDesktop");
+    LogHR(pLog, logdata, pDesktopManagerInternal->GetCurrentDesktop(&pCurrentDesktop), L"GetCurrentDesktop");
     return GetDesktopNumber(pDesktopManagerInternal, static_cast<VD*>(pCurrentDesktop));
 }
 
@@ -309,7 +309,7 @@ void SetDesktopName(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal, in
     {
         HSTRING s = NULL;
         LogHR(pLog, logdata, WindowsCreateString(name, static_cast<UINT32>(wcslen(name)), &s), L"WindowsCreateString");
-        LogHR(pLog, logdata, pDesktopManagerInternal->SetName(pDesktop , s), L"SetDesktopName");
+        LogHR(pLog, logdata, pDesktopManagerInternal->SetDesktopName(pDesktop , s), L"SetDesktopName");
         WindowsDeleteString(s);
     }
 }
@@ -384,7 +384,7 @@ void SetDesktopWallpaper(LogF* pLog, void* logdata, VDMI* pDesktopManagerInterna
     {
         HSTRING s = NULL;
         LogHR(pLog, logdata, WindowsCreateString(wallpaper, static_cast<UINT32>(wcslen(wallpaper)), &s), L"WindowsCreateString");
-        LogHR(pLog, logdata, pDesktopManagerInternal->SetWallpaper(pDesktop, s), L"SetDesktopWallpaper");
+        LogHR(pLog, logdata, pDesktopManagerInternal->SetDesktopWallpaper(pDesktop, s), L"SetDesktopWallpaper");
         WindowsDeleteString(s);
     }
 }
@@ -410,9 +410,9 @@ template <class VD, class VDMI>
 void CreateDesktop(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal)
 {
     CComPtr<VD> pDesktop;
-    LogHR(pLog, logdata, CreateDesktop(pDesktopManagerInternal, &pDesktop), L"CreateDesktop");
+    LogHR(pLog, logdata, pDesktopManagerInternal->CreateDesktop(&pDesktop), L"CreateDesktop");
     if (pDesktop)
-        LogHR(pLog, logdata, SwitchDesktop(pDesktopManagerInternal, static_cast<VD*>(pDesktop)), L"SwitchDesktop");
+        LogHR(pLog, logdata, SwitchDesktop(pDesktopManagerInternal, static_cast<VD*>(pDesktop), false), L"SwitchDesktop");
 }
 
 void CreateDesktop(LogF* pLog, void* logdata)
@@ -431,7 +431,7 @@ template <class VD, class VDMI>
 void RemoveDesktop(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal, int d)
 {
     CComPtr<VD> pCurrentDesktop;
-    LogHR(pLog, logdata, GetCurrentDesktop(pDesktopManagerInternal, &pCurrentDesktop), L"GetCurrentDesktop");
+    LogHR(pLog, logdata, pDesktopManagerInternal->GetCurrentDesktop(&pCurrentDesktop), L"GetCurrentDesktop");
     CComPtr<VD> pDesktop = d == -1 ? pCurrentDesktop : GetDesktop<VD>(pLog, logdata, pDesktopManagerInternal, d);
     CComPtr<VD> pFallbackDesktop = pCurrentDesktop;
     if (!pFallbackDesktop || pFallbackDesktop.IsEqualObject(pDesktop))
@@ -469,6 +469,6 @@ bool IsCurrentDesktop(LogF* pLog, void* logdata, Win11::IVirtualDesktop* pDeskto
 {
     const CComPtr<Win11::IVirtualDesktopManagerInternal>& pDesktopManagerInternal11 = GetDesktopManagerInternal<Win11::IVirtualDesktopManagerInternal>(pLog, logdata);
     CComPtr<Win11::IVirtualDesktop> pCurrentDesktop;
-    LogHR(pLog, logdata, pDesktopManagerInternal11->GetCurrentDesktop(NULL, &pCurrentDesktop), L"GetCurrentDesktop");
+    LogHR(pLog, logdata, pDesktopManagerInternal11->GetCurrentDesktop(&pCurrentDesktop), L"GetCurrentDesktop");
     return pCurrentDesktop.IsEqualObject(pDesktop);
 }

@@ -87,34 +87,29 @@ STDMETHODIMP VirtualDesktopNotification::VirtualDesktopNameChanged(Win10::IVirtu
 
 // Win11::IVirtualDesktopNotification
 
-STDMETHODIMP VirtualDesktopNotification::VirtualDesktopCreated(IObjectArray* monitors, Win11::IVirtualDesktop* pDesktop)
+STDMETHODIMP VirtualDesktopNotification::VirtualDesktopCreated(Win11::IVirtualDesktop* pDesktop)
 {
     _notify->VirtualDesktopCreated(pDesktop);
     return S_OK;
 }
 
-STDMETHODIMP VirtualDesktopNotification::VirtualDesktopDestroyBegin(IObjectArray* monitors, Win11::IVirtualDesktop* pDesktopDestroyed, Win11::IVirtualDesktop* pDesktopFallback)
+STDMETHODIMP VirtualDesktopNotification::VirtualDesktopDestroyBegin(Win11::IVirtualDesktop* pDesktopDestroyed, Win11::IVirtualDesktop* pDesktopFallback)
 {
     return S_OK;
 }
 
-STDMETHODIMP VirtualDesktopNotification::VirtualDesktopDestroyFailed(IObjectArray* monitors, Win11::IVirtualDesktop* pDesktopDestroyed, Win11::IVirtualDesktop* pDesktopFallback)
+STDMETHODIMP VirtualDesktopNotification::VirtualDesktopDestroyFailed(Win11::IVirtualDesktop* pDesktopDestroyed, Win11::IVirtualDesktop* pDesktopFallback)
 {
     return S_OK;
 }
 
-STDMETHODIMP VirtualDesktopNotification::VirtualDesktopDestroyed(IObjectArray* monitors, Win11::IVirtualDesktop* pDesktopDestroyed, Win11::IVirtualDesktop* pDesktopFallback)
+STDMETHODIMP VirtualDesktopNotification::VirtualDesktopDestroyed(Win11::IVirtualDesktop* pDesktopDestroyed, Win11::IVirtualDesktop* pDesktopFallback)
 {
     _notify->VirtualDesktopDestroyed(pDesktopDestroyed, pDesktopFallback);
     return S_OK;
 }
 
-STDMETHODIMP VirtualDesktopNotification::VirtualDesktopIsPerMonitorChanged(_In_ BOOL isPerMonitor)
-{
-    return S_OK;
-}
-
-STDMETHODIMP VirtualDesktopNotification::VirtualDesktopMoved(IObjectArray* monitors, Win11::IVirtualDesktop* pDesktop, int64_t oldIndex, int64_t newIndex)
+STDMETHODIMP VirtualDesktopNotification::VirtualDesktopMoved(Win11::IVirtualDesktop* pDesktop, int64_t oldIndex, int64_t newIndex)
 {
     _notify->VirtualDesktopMoved(pDesktop, oldIndex, newIndex);
     return S_OK;
@@ -131,13 +126,23 @@ STDMETHODIMP VirtualDesktopNotification::ViewVirtualDesktopChanged11(IApplicatio
     return S_OK;
 }
 
-STDMETHODIMP VirtualDesktopNotification::CurrentVirtualDesktopChanged(IObjectArray* monitors, Win11::IVirtualDesktop* pDesktopOld, Win11::IVirtualDesktop* pDesktopNew)
+STDMETHODIMP VirtualDesktopNotification::CurrentVirtualDesktopChanged(Win11::IVirtualDesktop* pDesktopOld, Win11::IVirtualDesktop* pDesktopNew)
 {
     _notify->CurrentVirtualDesktopChanged(pDesktopOld, pDesktopNew);
     return S_OK;
 }
 
 STDMETHODIMP VirtualDesktopNotification::VirtualDesktopWallpaperChanged(Win11::IVirtualDesktop* pDesktop, HSTRING name)
+{
+    return S_OK;
+}
+
+STDMETHODIMP VirtualDesktopNotification::VirtualDesktopSwitched(Win11::IVirtualDesktop* pDesktop)
+{
+    return S_OK;
+}
+
+STDMETHODIMP VirtualDesktopNotification::RemoteVirtualDesktopConnected(Win11::IVirtualDesktop* pDesktop)
 {
     return S_OK;
 }
