@@ -274,6 +274,21 @@ private:
         }
     }
 
+    virtual void VirtualDesktopWallpaperChanged(Win11::IVirtualDesktop* pDesktop, HSTRING name) override
+    {
+        // TODO
+    }
+
+    virtual void VirtualDesktopSwitched(Win11::IVirtualDesktop* pDesktop, enum VirtualDesktopSwitchType type) override
+    {
+        // TODO
+    }
+
+    virtual void RemoteVirtualDesktopConnected(Win11::IVirtualDesktop* pDesktop) override
+    {
+        // TODO
+    }
+
 private:
     void RegisterForNotifications()
     {

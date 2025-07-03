@@ -17,9 +17,9 @@ public:
     virtual void VirtualDesktopMoved(Win11::IVirtualDesktop* pDesktop, int64_t oldIndex, int64_t newIndex) = 0;
     virtual void VirtualDesktopNameChanged(Win11::IVirtualDesktop* pDesktop, HSTRING name) = 0;
     virtual void CurrentVirtualDesktopChanged(Win11::IVirtualDesktop* pDesktopOld, Win11::IVirtualDesktop* pDesktopNew) = 0;
-    //virtual void VirtualDesktopWallpaperChanged(Win11::IVirtualDesktop* pDesktop, HSTRING name) = 0;
-    //virtual void VirtualDesktopSwitched(Win11::IVirtualDesktop* pDesktop) = 0;
-    //virtual void RemoteVirtualDesktopConnected(Win11::IVirtualDesktop* pDesktop) = 0;
+    virtual void VirtualDesktopWallpaperChanged(Win11::IVirtualDesktop* pDesktop, HSTRING name) = 0;
+    virtual void VirtualDesktopSwitched(Win11::IVirtualDesktop* pDesktop, enum VirtualDesktopSwitchType type) = 0;
+    virtual void RemoteVirtualDesktopConnected(Win11::IVirtualDesktop* pDesktop) = 0;
 };
 
 class VirtualDesktopNotification : public Win10::IVirtualDesktopNotification2, public Win11::IVirtualDesktopNotification

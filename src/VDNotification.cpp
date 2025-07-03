@@ -134,15 +134,18 @@ STDMETHODIMP VirtualDesktopNotification::CurrentVirtualDesktopChanged(Win11::IVi
 
 STDMETHODIMP VirtualDesktopNotification::VirtualDesktopWallpaperChanged(Win11::IVirtualDesktop* pDesktop, HSTRING name)
 {
+    _notify->VirtualDesktopWallpaperChanged(pDesktop, name);
     return S_OK;
 }
 
-STDMETHODIMP VirtualDesktopNotification::VirtualDesktopSwitched(Win11::IVirtualDesktop* pDesktop, enum VirtualDesktopSwitchType)
+STDMETHODIMP VirtualDesktopNotification::VirtualDesktopSwitched(Win11::IVirtualDesktop* pDesktop, enum VirtualDesktopSwitchType type)
 {
+    _notify->VirtualDesktopSwitched(pDesktop, type);
     return S_OK;
 }
 
 STDMETHODIMP VirtualDesktopNotification::RemoteVirtualDesktopConnected(Win11::IVirtualDesktop* pDesktop)
 {
+    _notify->RemoteVirtualDesktopConnected(pDesktop);
     return S_OK;
 }
