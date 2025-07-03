@@ -44,7 +44,7 @@ public:
     // Win10::IVirtualDesktopNotification2
     STDMETHODIMP VirtualDesktopNameChanged(Win10::IVirtualDesktop* pDesktop, HSTRING name) override;
 
-    // Win10::IVirtualDesktopNotification
+    // Win11::IVirtualDesktopNotification
     STDMETHODIMP VirtualDesktopCreated(Win11::IVirtualDesktop* pDesktop) override;
     STDMETHODIMP VirtualDesktopDestroyBegin(Win11::IVirtualDesktop* pDesktopDestroyed, Win11::IVirtualDesktop* pDesktopFallback) override;
     STDMETHODIMP VirtualDesktopDestroyFailed(Win11::IVirtualDesktop* pDesktopDestroyed, Win11::IVirtualDesktop* pDesktopFallback) override;
@@ -54,6 +54,6 @@ public:
     STDMETHODIMP ViewVirtualDesktopChanged11(IApplicationView* pView) override;
     STDMETHODIMP CurrentVirtualDesktopChanged(Win11::IVirtualDesktop* pDesktopOld, Win11::IVirtualDesktop* pDesktopNew) override;
     STDMETHODIMP VirtualDesktopWallpaperChanged(Win11::IVirtualDesktop* pDesktop, HSTRING name) override;
-    STDMETHODIMP VirtualDesktopSwitched(Win11::IVirtualDesktop* pDesktop) override;
+    STDMETHODIMP VirtualDesktopSwitched(Win11::IVirtualDesktop* pDesktop, enum VirtualDesktopSwitchType) override;
     STDMETHODIMP RemoteVirtualDesktopConnected(Win11::IVirtualDesktop* pDesktop) override;
 };

@@ -2,8 +2,8 @@
 
 // See for more up-to-date
 // https://github.com/skottmckay/VirtualDesktopAccessor
-
-// See https://github.com/y2nd66/WindowsVirtualDesktop/blob/main/11.22631.2115/11.22631.2115.txt
+// https://github.com/MScholtes/VirtualDesktop/blob/master/VirtualDesktop11.cs
+// https://github.com/slnz00/VirtualDesktopDumper
 
 #pragma once
 
@@ -132,8 +132,8 @@ namespace Win10 {
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE IsViewVisible(
-        _In_ IApplicationView* pView,
-        _Out_ BOOL* pfVisible) = 0;
+            _In_ IApplicationView* pView,
+            _Out_ BOOL* pfVisible) = 0;
 
         virtual HRESULT STDMETHODCALLTYPE GetID(
             _Out_ GUID* pGuid) = 0;
@@ -144,20 +144,21 @@ namespace Win10 {
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE GetName(
-        _Out_ HSTRING* pStr) = 0;
+            _Out_ HSTRING* pStr) = 0;
     };
 
 }
 
 namespace Win11 {
 
+    //MIDL_INTERFACE("536D3495-B208-4CC9-AE26-DE8111275BF8")
     MIDL_INTERFACE("3F07F4BE-B107-441A-AF0F-39D82529072C")
         IVirtualDesktop : public IUnknown
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE IsViewVisible(
-        _In_ IApplicationView* pView,
-        _Out_ BOOL* pfVisible) = 0;
+            _In_ IApplicationView* pView,
+            _Out_ BOOL* pfVisible) = 0;
 
         virtual HRESULT STDMETHODCALLTYPE GetID(
             _Out_ GUID* pGuid) = 0;
@@ -169,7 +170,7 @@ namespace Win11 {
             _Out_ HSTRING* p0) = 0;
 
         virtual HRESULT STDMETHODCALLTYPE IsRemote(
-            _Out_ BOOL* pBool) = 0;
+            _Out_ BOOL* pfRemote) = 0;
     };
 
 }
@@ -180,6 +181,18 @@ enum AdjacentDesktop
     RightDirection = 4
 };
 
+enum VirtualDesktopSwitchType
+{
+#if 0
+    SwitchTypeNone = 0,
+    SwitchTypeKeyboard = 1,
+    SwitchTypeMouse = 2,
+    SwitchTypeTouch = 3,
+    SwitchTypeGesture = 4,
+    SwitchTypeSystem = 5
+#endif
+};
+
 namespace Win10 {
 
     MIDL_INTERFACE("F31574D6-B682-4CDC-BD56-1827860ABEC6")
@@ -187,7 +200,7 @@ namespace Win10 {
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE GetCount(
-        _Out_ UINT* pCount) = 0;
+            _Out_ UINT* pCount) = 0;
 
         virtual HRESULT STDMETHODCALLTYPE MoveViewToDesktop(
             _In_ IApplicationView* pView,
@@ -236,7 +249,7 @@ namespace Win10 {
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE SetDesktopName(
-        _In_ IVirtualDesktop* p0,
+            _In_ IVirtualDesktop* p0,
             _In_ HSTRING name) = 0;
     };
 
@@ -245,15 +258,17 @@ namespace Win10 {
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE Proc15(
-        _In_ IApplicationView* p0,
-        _In_ IApplicationView* p1) = 0;
+            _In_ IApplicationView* p0,
+            _In_ IApplicationView* p1) = 0;
     };
 
 }
 
 namespace Win11 {
 
-    MIDL_INTERFACE("A3175F2D-239C-4BD2-8AA0-EEBA8B0B138E")
+    //MIDL_INTERFACE("B2F925B9-5A0F-4D2E-9F4D-2B1507593C10")
+    //MIDL_INTERFACE("A3175F2D-239C-4BD2-8AA0-EEBA8B0B138E")
+    MIDL_INTERFACE("53F5CA0B-158F-4124-900C-057158060B27")
         IVirtualDesktopManagerInternal : public IUnknown
     {
     public:
@@ -285,7 +300,7 @@ namespace Win11 {
         virtual HRESULT STDMETHODCALLTYPE CreateDesktopW(
             _Out_ IVirtualDesktop** ppNewDesktop) = 0;
 
-        virtual HRESULT STDMETHODCALLTYPE MoveDesktop(
+        virtual HRESULT STDMETHODCALLTYPE MoveDesktop(    // New for Win11
             _In_ IVirtualDesktop* desktop,
             _In_ INT32 index) = 0;
 
@@ -299,8 +314,8 @@ namespace Win11 {
 
         virtual HRESULT STDMETHODCALLTYPE GetDesktopSwitchIncludeExcludeViews(
             _In_ IVirtualDesktop* pDesktop,
-            _Out_ IObjectArray** ppDesktops1,
-            _Out_ IObjectArray** ppDesktops2) = 0;
+            _Out_ IObjectArray** ppViews1,
+            _Out_ IObjectArray** ppViews2) = 0;
 
         virtual HRESULT STDMETHODCALLTYPE SetDesktopName(
             _In_ IVirtualDesktop* p0,
@@ -322,7 +337,8 @@ namespace Win11 {
             _Out_ IVirtualDesktop** desktop) = 0;
 
         virtual HRESULT STDMETHODCALLTYPE SwitchRemoteDesktop(
-            _In_ IVirtualDesktop* pDesktop) = 0;
+            _In_ IVirtualDesktop* pDesktop,
+            _In_ enum VirtualDesktopSwitchType type) = 0;
 
         virtual HRESULT STDMETHODCALLTYPE SwitchDesktopWithAnimation(
             _In_ IVirtualDesktop* pDesktop) = 0;
@@ -341,7 +357,7 @@ namespace Win10 {
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE VirtualDesktopCreated(
-        _In_ IVirtualDesktop* pDesktop) = 0;
+            _In_ IVirtualDesktop* pDesktop) = 0;
 
         virtual HRESULT STDMETHODCALLTYPE VirtualDesktopDestroyBegin(
             _In_ IVirtualDesktop* pDesktopDestroyed,
@@ -370,7 +386,7 @@ namespace Win10 {
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE VirtualDesktopNameChanged(
-        _In_ IVirtualDesktop* pDesktop,
+            _In_ IVirtualDesktop* pDesktop,
             _In_ HSTRING p1) = 0;
     };
 
@@ -390,7 +406,9 @@ namespace Win10 {
 
 namespace Win11 {
 
-    MIDL_INTERFACE("B287FA1C-7771-471A-A2DF-9B6B21F0D675")
+    //MIDL_INTERFACE("CD403E52-DEED-4C13-B437-B98380F2B1E8")
+    //MIDL_INTERFACE("B287FA1C-7771-471A-A2DF-9B6B21F0D675")
+    MIDL_INTERFACE("B9E5E94D-233E-49AB-AF5C-2B4541C3AADE")
         IVirtualDesktopNotification : public IUnknown
     {
     public:
@@ -430,7 +448,8 @@ namespace Win11 {
             _In_ HSTRING name) = 0;
 
         virtual HRESULT STDMETHODCALLTYPE VirtualDesktopSwitched(
-            _In_ IVirtualDesktop* pDesktop) = 0;
+            _In_ IVirtualDesktop* pDesktop,
+            _In_ enum VirtualDesktopSwitchType type) = 0;
 
         virtual HRESULT STDMETHODCALLTYPE RemoteVirtualDesktopConnected(
             _In_ IVirtualDesktop* pDesktop) = 0;
@@ -450,17 +469,4 @@ namespace Win11 {
             _In_ DWORD dwCookie) = 0;
     };
 
-}
-
-inline HRESULT SwitchDesktop(Win10::IVirtualDesktopManagerInternal* pDesktopManagerInternal, Win10::IVirtualDesktop* pDesktop, bool /*bWithAnimation*/)
-{
-    return pDesktopManagerInternal->SwitchDesktop(pDesktop);
-}
-
-inline HRESULT SwitchDesktop(Win11::IVirtualDesktopManagerInternal* pDesktopManagerInternal, Win11::IVirtualDesktop* pDesktop, bool bWithAnimation)
-{
-    if (bWithAnimation)
-        return pDesktopManagerInternal->SwitchDesktopWithAnimation(pDesktop);
-    else
-        return pDesktopManagerInternal->SwitchDesktop(pDesktop);
 }

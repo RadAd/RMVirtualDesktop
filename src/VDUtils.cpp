@@ -130,7 +130,7 @@ void SwitchDesktop(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal, int
 {
     CComPtr<VD> pDesktop = GetDesktop<VD>(pLog, logdata, pDesktopManagerInternal, d);
     if (pDesktop)
-        LogHR(pLog, logdata, SwitchDesktop(pDesktopManagerInternal, static_cast<VD*>(pDesktop), false), L"SwitchDesktop");
+        LogHR(pLog, logdata, pDesktopManagerInternal->SwitchDesktop(static_cast<VD*>(pDesktop)), L"SwitchDesktop");
 }
 
 void SwitchDesktop(LogF* pLog, void* logdata, int d)
@@ -153,7 +153,7 @@ void SwitchDesktop(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal, enu
     CComPtr<VD> pDesktop;
     LogHR(pLog, logdata, pDesktopManagerInternal->GetAdjacentDesktop(pCurrentDesktop, direction, &pDesktop), TYPE_E_OUTOFBOUNDS, L"GetAdjacentDesktop");
     if (pDesktop)
-        LogHR(pLog, logdata, SwitchDesktop(pDesktopManagerInternal, static_cast<VD*>(pDesktop), false), L"SwitchDesktop");
+        LogHR(pLog, logdata, pDesktopManagerInternal->SwitchDesktop(static_cast<VD*>(pDesktop)), L"SwitchDesktop");
 }
 
 void SwitchDesktop(LogF* pLog, void* logdata, enum AdjacentDesktop direction)
@@ -412,7 +412,7 @@ void CreateDesktop(LogF* pLog, void* logdata, VDMI* pDesktopManagerInternal)
     CComPtr<VD> pDesktop;
     LogHR(pLog, logdata, pDesktopManagerInternal->CreateDesktop(&pDesktop), L"CreateDesktop");
     if (pDesktop)
-        LogHR(pLog, logdata, SwitchDesktop(pDesktopManagerInternal, static_cast<VD*>(pDesktop), false), L"SwitchDesktop");
+        LogHR(pLog, logdata, pDesktopManagerInternal->SwitchDesktop(static_cast<VD*>(pDesktop)), L"SwitchDesktop");
 }
 
 void CreateDesktop(LogF* pLog, void* logdata)

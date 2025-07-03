@@ -137,7 +137,7 @@ STDMETHODIMP VirtualDesktopNotification::VirtualDesktopWallpaperChanged(Win11::I
     return S_OK;
 }
 
-STDMETHODIMP VirtualDesktopNotification::VirtualDesktopSwitched(Win11::IVirtualDesktop* pDesktop)
+STDMETHODIMP VirtualDesktopNotification::VirtualDesktopSwitched(Win11::IVirtualDesktop* pDesktop, enum VirtualDesktopSwitchType)
 {
     return S_OK;
 }
